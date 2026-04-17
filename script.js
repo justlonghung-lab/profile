@@ -346,7 +346,10 @@ document.addEventListener('click', (e) => {
   const gamePlayer = document.getElementById('gamePlayer');
   const gameScore = document.getElementById('gameScore');
 
-  if (!gameBtn || !gameModal || !gameClose || !gameStage || !gamePlayer || !gameScore) return;
+  if (!gameBtn || !gameModal || !gameClose || !gameStage || !gamePlayer || !gameScore) {
+    console.warn('Mini game elements missing.');
+    return;
+  }
 
   let modalOpen = false;
   let score = 0;
@@ -356,16 +359,23 @@ document.addEventListener('click', (e) => {
   let moneyItems = [];
   let spawnTimer = null;
   let animId = null;
-  let stageHover = false;
 
   function updateStageRect() {
     stageRect = gameStage.getBoundingClientRect();
   }
 
+  function renderPlayer() {
+    gamePlayer.style.left = `${playerX}px`;
+  }
+
+  function clearMoney() {
+    moneyItems.forEach((item) => item.el.remove());
+    moneyItems = [];
+  }
+
   function openGame() {
     modalOpen = true;
     score = 0;
-    moneyItems = [];
     gameScore.textContent = '0';
     gameModal.classList.add('show');
     gameModal.setAttribute('aria-hidden', 'false');
@@ -393,10 +403,6 @@ document.addEventListener('click', (e) => {
     clearMoney();
   }
 
-  function renderPlayer() {
-    gamePlayer.style.left = `${playerX}px`;
-  }
-
   function setPlayerByClientX(clientX) {
     if (!stageRect) updateStageRect();
 
@@ -415,15 +421,14 @@ document.addEventListener('click', (e) => {
     el.textContent = '💸';
 
     const size = 34 + Math.random() * 16;
-    const x = 10 + Math.random() * (stageRect.width - size - 20);
-    const speed = 2.1 + Math.random() * 1.8;
-    const swayAmp = 8 + Math.random() * 14;
+    const x = 10 + Math.random() * Math.max(40, stageRect.width - size - 20);
+    const speed = 2.2 + Math.random() * 1.8;
+    const swayAmp = 8 + Math.random() * 12;
     const swaySpeed = 0.02 + Math.random() * 0.02;
 
     el.style.width = `${size}px`;
     el.style.height = `${size}px`;
     el.style.fontSize = `${size - 2}px`;
-    el.style.left = `${x}px`;
 
     gameStage.appendChild(el);
 
@@ -442,10 +447,13 @@ document.addEventListener('click', (e) => {
 
   function startSpawn() {
     stopSpawn();
+    spawnMoney();
     spawnTimer = setInterval(() => {
       spawnMoney();
       if (Math.random() > 0.72) {
-        setTimeout(spawnMoney, 180);
+        setTimeout(() => {
+          if (modalOpen) spawnMoney();
+        }, 180);
       }
     }, 520);
   }
@@ -457,28 +465,23 @@ document.addEventListener('click', (e) => {
     }
   }
 
-  function clearMoney() {
-    moneyItems.forEach(item => item.el.remove());
-    moneyItems = [];
-  }
-
   function startLoop() {
     stopLoop();
 
     const loop = () => {
       if (!modalOpen) return;
 
-      playerX += (targetPlayerX - playerX) * 0.16;
+      playerX += (targetPlayerX - playerX) * 0.18;
       renderPlayer();
 
       const playerWidth = gamePlayer.offsetWidth;
       const playerHeight = gamePlayer.offsetHeight || playerWidth;
       const playerLeft = playerX - playerWidth / 2;
       const playerRight = playerX + playerWidth / 2;
-      const playerTop = stageRect.height - playerHeight - 20;
-      const playerBottom = stageRect.height - 6;
+      const playerTop = stageRect.height - playerHeight - 18;
+      const playerBottom = stageRect.height - 4;
 
-      moneyItems = moneyItems.filter(item => {
+      moneyItems = moneyItems.filter((item) => {
         item.y += item.speed;
         item.phase += item.swaySpeed;
 
@@ -495,8 +498,8 @@ document.addEventListener('click', (e) => {
         const hit =
           itemRight > playerLeft + 8 &&
           itemLeft < playerRight - 8 &&
-          itemBottom > playerTop + 10 &&
-          itemTop < playerBottom - 6;
+          itemBottom > playerTop + 8 &&
+          itemTop < playerBottom - 4;
 
         if (hit && !item.caught) {
           item.caught = true;
@@ -511,7 +514,7 @@ document.addEventListener('click', (e) => {
           return false;
         }
 
-        if (item.y > stageRect.height + 70) {
+        if (item.y > stageRect.height + 80) {
           item.el.remove();
           return false;
         }
@@ -532,52 +535,49 @@ document.addEventListener('click', (e) => {
     }
   }
 
-  gameBtn.addEventListener('click', openGame);
-  gameClose.addEventListener('click', closeGame);
+  gameBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    openGame();
+  });
 
-  gameModal.addEventListener('click', (e) => {
+  gameClose.addEventListener('click', function () {
+    closeGame();
+  });
+
+  gameModal.addEventListener('click', function (e) {
     if (e.target === gameModal) {
       closeGame();
     }
   });
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && modalOpen) {
       closeGame();
     }
   });
 
-  gameStage.addEventListener('mousemove', (e) => {
-    stageHover = true;
+  gameStage.addEventListener('mousemove', function (e) {
     setPlayerByClientX(e.clientX);
   });
 
-  gameStage.addEventListener('mouseenter', () => {
-    stageHover = true;
-  });
-
-  gameStage.addEventListener('mouseleave', () => {
-    stageHover = false;
-  });
-
-  gameStage.addEventListener('touchstart', (e) => {
+  gameStage.addEventListener('touchstart', function (e) {
     updateStageRect();
     const touch = e.touches[0];
     setPlayerByClientX(touch.clientX);
   }, { passive: true });
 
-  gameStage.addEventListener('touchmove', (e) => {
+  gameStage.addEventListener('touchmove', function (e) {
     const touch = e.touches[0];
     setPlayerByClientX(touch.clientX);
   }, { passive: true });
 
-  window.addEventListener('resize', () => {
-    if (modalOpen) {
-      updateStageRect();
-      const half = gamePlayer.offsetWidth / 2;
-      playerX = Math.max(half, Math.min(stageRect.width - half, playerX));
-      targetPlayerX = Math.max(half, Math.min(stageRect.width - half, targetPlayerX));
-      renderPlayer();
-    }
+  window.addEventListener('resize', function () {
+    if (!modalOpen) return;
+    updateStageRect();
+    const half = gamePlayer.offsetWidth / 2;
+    playerX = Math.max(half, Math.min(stageRect.width - half, playerX));
+    targetPlayerX = Math.max(half, Math.min(stageRect.width - half, targetPlayerX));
+    renderPlayer();
   });
 })();
