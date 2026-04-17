@@ -1,0 +1,337 @@
+/* =============================
+   CURSOR TRACK
+============================= */
+let mx = window.innerWidth / 2;
+let my = window.innerHeight / 2;
+
+document.addEventListener('mousemove', (e) => {
+  mx = e.clientX;
+  my = e.clientY;
+  document.body.style.setProperty('--cx', `${mx}px`);
+  document.body.style.setProperty('--cy', `${my}px`);
+});
+
+/* =============================
+   BACKGROUND CANVAS
+============================= */
+(function setupBg() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  const orbs = [
+    { cx: 0.16, cy: 0.18, r: 0.42, color: '#001f47', dx: 0.00022, dy: 0.00018 },
+    { cx: 0.82, cy: 0.72, r: 0.36, color: '#00264f', dx: -0.00018, dy: 0.00024 },
+    { cx: 0.50, cy: 0.54, r: 0.55, color: '#00295d', dx: 0.00012, dy: -0.00016 },
+    { cx: 0.90, cy: 0.14, r: 0.25, color: '#003d6d', dx: -0.00024, dy: 0.0001 },
+    { cx: 0.22, cy: 0.86, r: 0.25, color: '#00213f', dx: 0.00015, dy: -0.00014 }
+  ];
+
+  let t = 0;
+
+  function draw() {
+    t += 1;
+    const W = canvas.width;
+    const H = canvas.height;
+
+    ctx.clearRect(0, 0, W, H);
+
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#03101d');
+    bg.addColorStop(0.45, '#072240');
+    bg.addColorStop(1, '#02101d');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    orbs.forEach((o) => {
+      o.cx += o.dx * Math.sin(t * 0.01);
+      o.cy += o.dy * Math.cos(t * 0.013);
+
+      const x = o.cx * W;
+      const y = o.cy * H;
+      const r = o.r * Math.min(W, H);
+
+      const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, `${o.color}dd`);
+      g.addColorStop(0.55, `${o.color}48`);
+      g.addColorStop(1, 'transparent');
+
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    const mouseGlow = ctx.createRadialGradient(mx, my, 0, mx, my, 330);
+    mouseGlow.addColorStop(0, 'rgba(130,220,255,0.28)');
+    mouseGlow.addColorStop(0.22, 'rgba(60,170,255,0.16)');
+    mouseGlow.addColorStop(0.6, 'rgba(10,132,255,0.05)');
+    mouseGlow.addColorStop(1, 'transparent');
+
+    ctx.fillStyle = mouseGlow;
+    ctx.beginPath();
+    ctx.arc(mx, my, 330, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = 'rgba(255,255,255,0.012)';
+    for (let y = 0; y < H; y += 4) {
+      ctx.fillRect(0, y, W, 1);
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+})();
+
+/* =============================
+   GEO SHAPES
+============================= */
+(function setupGeo() {
+  const layer = document.getElementById('geoLayer');
+  const count = 26;
+
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'geo';
+
+    const size = 28 + Math.random() * 70;
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.left = `${Math.random() * 100}%`;
+    el.style.top = `${100 + Math.random() * 40}%`;
+    el.style.borderRadius = Math.random() > 0.55 ? '50%' : `${8 + Math.random() * 14}px`;
+    el.style.animationDuration = `${18 + Math.random() * 22}s`;
+    el.style.animationDelay = `-${Math.random() * 20}s`;
+
+    layer.appendChild(el);
+  }
+
+  function spawnBurst(x, y, n = 8) {
+    for (let i = 0; i < n; i++) {
+      const el = document.createElement('div');
+      el.className = 'geo';
+      const size = 8 + Math.random() * 16;
+      const angle = (i / n) * Math.PI * 2;
+      const dist = 60 + Math.random() * 90;
+
+      el.style.cssText = `
+        width:${size}px;
+        height:${size}px;
+        position:fixed;
+        left:${x}px;
+        top:${y}px;
+        border-radius:${Math.random() > 0.5 ? '50%' : '6px'};
+        opacity:0.45;
+        z-index:5;
+        transition:transform .75s ease-out, opacity .75s ease-out;
+        transform:translate(-50%,-50%) scale(1);
+        pointer-events:none;
+      `;
+
+      layer.appendChild(el);
+
+      requestAnimationFrame(() => {
+        el.style.transform = `translate(calc(-50% + ${Math.cos(angle) * dist}px), calc(-50% + ${Math.sin(angle) * dist}px)) scale(0.2)`;
+        el.style.opacity = '0';
+      });
+
+      setTimeout(() => el.remove(), 800);
+    }
+  }
+
+  document.addEventListener('click', (e) => {
+    spawnBurst(e.clientX, e.clientY, 7);
+  });
+})();
+
+/* =============================
+   STRONG 3D TILT
+============================= */
+(function setupTilt() {
+  const card = document.getElementById('card');
+  const frame = document.querySelector('.card-frame');
+
+  let targetRX = 0;
+  let targetRY = 0;
+  let currentRX = 0;
+  let currentRY = 0;
+
+  function updateTarget(x, y) {
+    const rect = frame.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    targetRY = ((x - cx) / (rect.width / 2)) * 18;
+    targetRX = (-(y - cy) / (rect.height / 2)) * 14;
+  }
+
+  document.addEventListener('mousemove', (e) => {
+    updateTarget(e.clientX, e.clientY);
+  });
+
+  document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    updateTarget(touch.clientX, touch.clientY);
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    targetRX = 0;
+    targetRY = 0;
+  });
+
+  document.addEventListener('touchend', () => {
+    targetRX = 0;
+    targetRY = 0;
+  });
+
+  function animate() {
+    currentRX += (targetRX - currentRX) * 0.09;
+    currentRY += (targetRY - currentRY) * 0.09;
+
+    frame.style.transform = `rotateX(${currentRX}deg) rotateY(${currentRY}deg)`;
+    card.style.transform = `translateZ(0px)`;
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+
+/* =============================
+   FIREWORKS FAST
+============================= */
+const fwCanvas = document.getElementById('fw-canvas');
+const fwCtx = fwCanvas.getContext('2d');
+let fwParticles = [];
+
+function fwResize() {
+  fwCanvas.width = window.innerWidth;
+  fwCanvas.height = window.innerHeight;
+}
+fwResize();
+window.addEventListener('resize', fwResize);
+
+class FWParticle {
+  constructor(x, y, color) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 7 + 3;
+
+    this.x = x;
+    this.y = y;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.alpha = 1;
+    this.decay = Math.random() * 0.017 + 0.012;
+    this.radius = Math.random() * 2.8 + 1.4;
+    this.gravity = 0.11;
+    this.color = color;
+    this.trail = [];
+  }
+
+  update() {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > 6) this.trail.shift();
+
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vx *= 0.985;
+    this.alpha -= this.decay;
+  }
+
+  draw() {
+    this.trail.forEach((t, i) => {
+      const a = (i / this.trail.length) * this.alpha * 0.45;
+      fwCtx.beginPath();
+      fwCtx.arc(t.x, t.y, this.radius * (i / this.trail.length), 0, Math.PI * 2);
+      fwCtx.fillStyle = this.color.replace(',1)', `,${a})`);
+      fwCtx.fill();
+    });
+
+    fwCtx.beginPath();
+    fwCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    fwCtx.fillStyle = this.color.replace(',1)', `,${this.alpha})`);
+    fwCtx.fill();
+  }
+
+  dead() {
+    return this.alpha <= 0;
+  }
+}
+
+const FW_COLORS = [
+  'rgba(111,211,255,1)',
+  'rgba(10,132,255,1)',
+  'rgba(255,255,255,1)',
+  'rgba(0,180,255,1)',
+  'rgba(160,235,255,1)'
+];
+
+function fwExplode(x, y) {
+  const color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+  for (let i = 0; i < 92; i++) {
+    fwParticles.push(new FWParticle(x, y, color));
+  }
+  for (let i = 0; i < 18; i++) {
+    fwParticles.push(new FWParticle(x, y, 'rgba(255,255,255,1)'));
+  }
+}
+
+function fwLoop() {
+  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+  fwParticles = fwParticles.filter((p) => !p.dead());
+  fwParticles.forEach((p) => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(fwLoop);
+}
+fwLoop();
+
+document.getElementById('fundBtn').addEventListener('click', () => {
+  const x = window.innerWidth * (0.42 + Math.random() * 0.16);
+  const y = window.innerHeight * (0.28 + Math.random() * 0.08);
+
+  fwExplode(x, y);
+  setTimeout(() => fwExplode(x - 120, y + 30), 90);
+  setTimeout(() => fwExplode(x + 120, y + 20), 180);
+});
+
+/* =============================
+   GLOBAL RIPPLE
+============================= */
+document.addEventListener('click', (e) => {
+  const ripple = document.createElement('span');
+
+  ripple.style.cssText = `
+    position:fixed;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:rgba(255,255,255,0.62);
+    left:${e.clientX}px;
+    top:${e.clientY}px;
+    transform:translate(-50%,-50%) scale(0);
+    pointer-events:none;
+    z-index:9999;
+    transition:transform .62s ease, opacity .62s ease;
+    box-shadow:0 0 18px rgba(111,211,255,0.8), 0 0 34px rgba(10,132,255,0.4);
+  `;
+
+  document.body.appendChild(ripple);
+
+  requestAnimationFrame(() => {
+    ripple.style.transform = 'translate(-50%,-50%) scale(16)';
+    ripple.style.opacity = '0';
+  });
+
+  setTimeout(() => ripple.remove(), 650);
+});

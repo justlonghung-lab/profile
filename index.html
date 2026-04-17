@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LH Profile</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+  <canvas id="fw-canvas"></canvas>
+  <div class="geo-layer" id="geoLayer"></div>
+
+  <div class="scene" id="scene">
+    <div class="card-frame">
+      
+
+      <div class="card" id="card">
+        <div class="card-gloss"></div>
+
+        <div class="avatar-block">
+          <div class="avatar-orbit">
+            <div class="orbit-dot"></div>
+          </div>
+
+          <div class="avatar-wrap">
+            <div class="avatar-ring"></div>
+            <img src="avatar.jpg" alt="Nông Long Hưng" class="avatar" />
+            <div class="avatar-sweep"></div>
+          </div>
+        </div>
+
+        <div class="info">
+          <h1 class="name">Nông Long Hưng</h1>
+          <p class="job-title">MEDIA</p>
+          <p class="bio">"Trong số bọn tao,<br>thằng dreadlock có thằng tóc bết."</p>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.behance.net/justlonghung" target="_blank" class="social-btn be">
+            <span>Behance</span>
+          </a>
+          <a href="https://www.instagram.com/justlonghung/" target="_blank" class="social-btn ig">
+            <span>Instagram</span>
+          </a>
+          <a href="https://www.facebook.com/justlonghung/" target="_blank" class="social-btn fb">
+            <span>Facebook</span>
+          </a>
+          <a href="http://zalo.me/0378768331" target="_blank" class="social-btn zl">
+            <span>Zalo</span>
+          </a>
+        </div>
+
+        <button class="fund-btn" id="fundBtn">
+          <span class="fund-icon">💸</span>
+          <span class="fund-text">Xung Quỹ</span>
+          <span class="fund-pulse"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
