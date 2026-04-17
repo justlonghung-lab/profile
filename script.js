@@ -335,3 +335,249 @@ document.addEventListener('click', (e) => {
 
   setTimeout(() => ripple.remove(), 650);
 });
+/* =============================
+   MINI GAME: HUNG TIEN
+============================= */
+(function setupMiniGame() {
+  const gameBtn = document.getElementById('gameBtn');
+  const gameModal = document.getElementById('gameModal');
+  const gameClose = document.getElementById('gameClose');
+  const gameStage = document.getElementById('gameStage');
+  const gamePlayer = document.getElementById('gamePlayer');
+  const gameScore = document.getElementById('gameScore');
+
+  if (!gameBtn || !gameModal || !gameClose || !gameStage || !gamePlayer || !gameScore) return;
+
+  let modalOpen = false;
+  let score = 0;
+  let playerX = 0;
+  let targetPlayerX = 0;
+  let stageRect = null;
+  let moneyItems = [];
+  let spawnTimer = null;
+  let animId = null;
+  let stageHover = false;
+
+  function updateStageRect() {
+    stageRect = gameStage.getBoundingClientRect();
+  }
+
+  function openGame() {
+    modalOpen = true;
+    score = 0;
+    moneyItems = [];
+    gameScore.textContent = '0';
+    gameModal.classList.add('show');
+    gameModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+
+    updateStageRect();
+
+    playerX = stageRect.width / 2;
+    targetPlayerX = playerX;
+    renderPlayer();
+
+    clearMoney();
+    startSpawn();
+    startLoop();
+  }
+
+  function closeGame() {
+    modalOpen = false;
+    gameModal.classList.remove('show');
+    gameModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+
+    stopSpawn();
+    stopLoop();
+    clearMoney();
+  }
+
+  function renderPlayer() {
+    gamePlayer.style.left = `${playerX}px`;
+  }
+
+  function setPlayerByClientX(clientX) {
+    if (!stageRect) updateStageRect();
+
+    const half = gamePlayer.offsetWidth / 2;
+    let x = clientX - stageRect.left;
+    x = Math.max(half, Math.min(stageRect.width - half, x));
+    targetPlayerX = x;
+  }
+
+  function spawnMoney() {
+    if (!modalOpen) return;
+    if (!stageRect) updateStageRect();
+
+    const el = document.createElement('div');
+    el.className = 'game-money';
+    el.textContent = '💸';
+
+    const size = 34 + Math.random() * 16;
+    const x = 10 + Math.random() * (stageRect.width - size - 20);
+    const speed = 2.1 + Math.random() * 1.8;
+    const swayAmp = 8 + Math.random() * 14;
+    const swaySpeed = 0.02 + Math.random() * 0.02;
+
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.fontSize = `${size - 2}px`;
+    el.style.left = `${x}px`;
+
+    gameStage.appendChild(el);
+
+    moneyItems.push({
+      el,
+      x,
+      y: -size,
+      size,
+      speed,
+      swayAmp,
+      swaySpeed,
+      phase: Math.random() * Math.PI * 2,
+      caught: false
+    });
+  }
+
+  function startSpawn() {
+    stopSpawn();
+    spawnTimer = setInterval(() => {
+      spawnMoney();
+      if (Math.random() > 0.72) {
+        setTimeout(spawnMoney, 180);
+      }
+    }, 520);
+  }
+
+  function stopSpawn() {
+    if (spawnTimer) {
+      clearInterval(spawnTimer);
+      spawnTimer = null;
+    }
+  }
+
+  function clearMoney() {
+    moneyItems.forEach(item => item.el.remove());
+    moneyItems = [];
+  }
+
+  function startLoop() {
+    stopLoop();
+
+    const loop = () => {
+      if (!modalOpen) return;
+
+      playerX += (targetPlayerX - playerX) * 0.16;
+      renderPlayer();
+
+      const playerWidth = gamePlayer.offsetWidth;
+      const playerHeight = gamePlayer.offsetHeight || playerWidth;
+      const playerLeft = playerX - playerWidth / 2;
+      const playerRight = playerX + playerWidth / 2;
+      const playerTop = stageRect.height - playerHeight - 20;
+      const playerBottom = stageRect.height - 6;
+
+      moneyItems = moneyItems.filter(item => {
+        item.y += item.speed;
+        item.phase += item.swaySpeed;
+
+        const sway = Math.sin(item.phase) * item.swayAmp;
+        const drawX = item.x + sway;
+
+        item.el.style.transform = `translate3d(${drawX}px, ${item.y}px, 0)`;
+
+        const itemLeft = drawX;
+        const itemRight = drawX + item.size;
+        const itemTop = item.y;
+        const itemBottom = item.y + item.size;
+
+        const hit =
+          itemRight > playerLeft + 8 &&
+          itemLeft < playerRight - 8 &&
+          itemBottom > playerTop + 10 &&
+          itemTop < playerBottom - 6;
+
+        if (hit && !item.caught) {
+          item.caught = true;
+          item.el.style.transition = 'transform .22s ease, opacity .22s ease';
+          item.el.style.opacity = '0';
+          item.el.style.transform = `translate3d(${drawX}px, ${item.y - 16}px, 0) scale(1.22)`;
+
+          score += 1;
+          gameScore.textContent = String(score);
+
+          setTimeout(() => item.el.remove(), 220);
+          return false;
+        }
+
+        if (item.y > stageRect.height + 70) {
+          item.el.remove();
+          return false;
+        }
+
+        return true;
+      });
+
+      animId = requestAnimationFrame(loop);
+    };
+
+    animId = requestAnimationFrame(loop);
+  }
+
+  function stopLoop() {
+    if (animId) {
+      cancelAnimationFrame(animId);
+      animId = null;
+    }
+  }
+
+  gameBtn.addEventListener('click', openGame);
+  gameClose.addEventListener('click', closeGame);
+
+  gameModal.addEventListener('click', (e) => {
+    if (e.target === gameModal) {
+      closeGame();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOpen) {
+      closeGame();
+    }
+  });
+
+  gameStage.addEventListener('mousemove', (e) => {
+    stageHover = true;
+    setPlayerByClientX(e.clientX);
+  });
+
+  gameStage.addEventListener('mouseenter', () => {
+    stageHover = true;
+  });
+
+  gameStage.addEventListener('mouseleave', () => {
+    stageHover = false;
+  });
+
+  gameStage.addEventListener('touchstart', (e) => {
+    updateStageRect();
+    const touch = e.touches[0];
+    setPlayerByClientX(touch.clientX);
+  }, { passive: true });
+
+  gameStage.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    setPlayerByClientX(touch.clientX);
+  }, { passive: true });
+
+  window.addEventListener('resize', () => {
+    if (modalOpen) {
+      updateStageRect();
+      const half = gamePlayer.offsetWidth / 2;
+      playerX = Math.max(half, Math.min(stageRect.width - half, playerX));
+      targetPlayerX = Math.max(half, Math.min(stageRect.width - half, targetPlayerX));
+      renderPlayer();
+    }
+  });
+})();
