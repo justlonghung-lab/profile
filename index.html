@@ -56,15 +56,40 @@
           </a>
         </div>
 
-        <button class="fund-btn" id="fundBtn">
-          <span class="fund-icon">💸</span>
-          <span class="fund-text">Xung Quỹ</span>
-          <span class="fund-pulse"></span>
-        </button>
+        <div class="action-row">
+  <button class="fund-btn" id="fundBtn">
+    <span class="fund-icon">💸</span>
+    <span class="fund-text">Xung Quỹ</span>
+    <span class="fund-pulse"></span>
+  </button>
+
+  <button class="game-btn" id="gameBtn">
+    <span class="game-icon">🎮</span>
+    <span class="game-text">Gêm</span>
+  </button>
+</div>
       </div>
     </div>
   </div>
 
   <script src="script.js"></script>
+  <div class="game-modal" id="gameModal" aria-hidden="true">
+  <div class="game-panel">
+    <button class="game-close" id="gameClose" type="button">✕</button>
+
+    <div class="game-head">
+      <div class="game-title">Gêm Hứng Tiền</div>
+      <div class="game-score-wrap">
+        <span>Điểm:</span>
+        <strong id="gameScore">0</strong>
+      </div>
+    </div>
+
+    <div class="game-stage" id="gameStage">
+      <div class="game-hud">Di chuột để hứng tiền</div>
+      <img src="phule.png" alt="Nhân vật game" class="game-player" id="gamePlayer" />
+    </div>
+  </div>
+</div>
 </body>
 </html>
