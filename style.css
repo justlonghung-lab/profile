@@ -782,3 +782,300 @@ body::after {
     letter-spacing: -0.03em;
   }
 }
+/* ── ACTION ROW ── */
+.action-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: stretch;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 420px;
+  transform: translateZ(24px);
+}
+
+.action-row .fund-btn,
+.action-row .game-btn {
+  flex: 1 1 0;
+  min-width: 150px;
+}
+
+/* ── GAME BUTTON ── */
+.game-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border: 1px solid rgba(111, 211, 255, 0.22);
+  border-radius: 999px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.06),
+    rgba(10,132,255,0.16)
+  );
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  overflow: hidden;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease,
+    background 0.22s ease;
+}
+
+.game-btn::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  left: -130%;
+  width: 58%;
+  height: 180%;
+  transform: rotate(20deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.12) 20%,
+    rgba(255,255,255,0.92) 50%,
+    rgba(180,235,255,0.14) 72%,
+    rgba(255,255,255,0) 100%
+  );
+  filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.game-btn:hover::before {
+  animation: socialSweep 1s ease forwards;
+  opacity: 1;
+}
+
+.game-btn:hover {
+  transform: translateY(-4px) scale(1.03);
+  border-color: rgba(150, 225, 255, 0.45);
+  box-shadow:
+    0 16px 30px rgba(0,0,0,0.24),
+    0 0 16px rgba(111,211,255,0.14),
+    0 0 28px rgba(10,132,255,0.12);
+}
+
+.game-btn:active {
+  transform: scale(0.97);
+}
+
+.game-icon,
+.game-text {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── GAME MODAL ── */
+.game-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(2, 10, 20, 0.58);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.28s ease,
+    visibility 0.28s ease;
+}
+
+.game-modal.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.game-panel {
+  position: relative;
+  width: min(92vw, 720px);
+  border-radius: 28px;
+  padding: 18px 18px 16px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)),
+    linear-gradient(135deg, rgba(0,61,109,0.46), rgba(3,18,35,0.88));
+  border: 1px solid rgba(111, 211, 255, 0.18);
+  box-shadow:
+    0 24px 70px rgba(0,0,0,0.42),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    inset 0 0 80px rgba(10,132,255,0.05);
+  overflow: hidden;
+}
+
+.game-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-right: 34px;
+}
+
+.game-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.game-score-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(111, 211, 255, 0.16);
+  color: #d8f3ff;
+  font-size: 0.92rem;
+}
+
+.game-score-wrap strong {
+  color: #fff;
+  min-width: 28px;
+  text-align: right;
+}
+
+.game-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1rem;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(111,211,255,0.18);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.game-close:hover {
+  transform: scale(1.08);
+  background: rgba(255,255,255,0.14);
+}
+
+.game-stage {
+  position: relative;
+  width: 100%;
+  height: min(70vh, 520px);
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(111,211,255,0.18), transparent 24%),
+    radial-gradient(circle at 82% 24%, rgba(10,132,255,0.16), transparent 24%),
+    linear-gradient(180deg, #06172a 0%, #0b2340 45%, #071523 100%);
+  border: 1px solid rgba(111, 211, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 0 60px rgba(10,132,255,0.04);
+  cursor: none;
+}
+
+.game-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 100% 4px;
+  pointer-events: none;
+  opacity: 0.25;
+}
+
+.game-hud {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  z-index: 3;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(111, 211, 255, 0.14);
+  color: rgba(238,247,255,0.86);
+  font-size: 0.84rem;
+}
+
+.game-player {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  width: 96px;
+  height: auto;
+  z-index: 2;
+  pointer-events: none;
+  transform: translateX(-50%);
+  user-select: none;
+  filter:
+    drop-shadow(0 8px 14px rgba(0,0,0,0.28))
+    drop-shadow(0 0 14px rgba(111,211,255,0.18));
+}
+
+.game-money {
+  position: absolute;
+  top: -80px;
+  width: 42px;
+  height: 42px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform;
+  filter:
+    drop-shadow(0 4px 10px rgba(0,0,0,0.2))
+    drop-shadow(0 0 10px rgba(255,225,120,0.12));
+}
+
+@media (max-width: 640px) {
+  .action-row {
+    max-width: 100%;
+    gap: 10px;
+  }
+
+  .action-row .fund-btn,
+  .action-row .game-btn {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .game-panel {
+    width: min(96vw, 720px);
+    padding: 14px 14px 12px;
+    border-radius: 22px;
+  }
+
+  .game-head {
+    margin-bottom: 10px;
+    padding-right: 36px;
+  }
+
+  .game-stage {
+    height: min(62vh, 440px);
+    cursor: default;
+  }
+
+  .game-player {
+    width: 82px;
+  }
+
+  .game-money {
+    width: 36px;
+    height: 36px;
+  }
+}
