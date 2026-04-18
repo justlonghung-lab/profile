@@ -32,7 +32,9 @@ document.addEventListener('mousemove', (e) => {
     { cx: 0.82, cy: 0.72, r: 0.36, color: '#00264f', dx: -0.00018, dy: 0.00024 },
     { cx: 0.50, cy: 0.54, r: 0.55, color: '#00295d', dx: 0.00012, dy: -0.00016 },
     { cx: 0.90, cy: 0.14, r: 0.25, color: '#003d6d', dx: -0.00024, dy: 0.0001 },
-    { cx: 0.22, cy: 0.86, r: 0.25, color: '#00213f', dx: 0.00015, dy: -0.00014 }
+    { cx: 0.22, cy: 0.86, r: 0.25, color: '#00213f', dx: 0.00015, dy: -0.00014 },
+    { cx: 0.68, cy: 0.22, r: 0.22, color: '#00427e', dx: 0.00012, dy: 0.0001 },
+    { cx: 0.08, cy: 0.62, r: 0.18, color: '#00305f', dx: 0.00011, dy: -0.00012 }
   ];
 
   let t = 0;
@@ -70,15 +72,15 @@ document.addEventListener('mousemove', (e) => {
       ctx.fill();
     });
 
-    const mouseGlow = ctx.createRadialGradient(mx, my, 0, mx, my, 330);
-    mouseGlow.addColorStop(0, 'rgba(130,220,255,0.28)');
-    mouseGlow.addColorStop(0.22, 'rgba(60,170,255,0.16)');
-    mouseGlow.addColorStop(0.6, 'rgba(10,132,255,0.05)');
+    const mouseGlow = ctx.createRadialGradient(mx, my, 0, mx, my, 360);
+    mouseGlow.addColorStop(0, 'rgba(130,220,255,0.32)');
+    mouseGlow.addColorStop(0.22, 'rgba(60,170,255,0.18)');
+    mouseGlow.addColorStop(0.6, 'rgba(10,132,255,0.06)');
     mouseGlow.addColorStop(1, 'transparent');
 
     ctx.fillStyle = mouseGlow;
     ctx.beginPath();
-    ctx.arc(mx, my, 330, 0, Math.PI * 2);
+    ctx.arc(mx, my, 360, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.fillStyle = 'rgba(255,255,255,0.012)';
@@ -99,19 +101,19 @@ document.addEventListener('mousemove', (e) => {
   const layer = document.getElementById('geoLayer');
   if (!layer) return;
 
-  const count = 26;
+  const count = 34;
 
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
     el.className = 'geo';
 
-    const size = 28 + Math.random() * 70;
+    const size = 24 + Math.random() * 92;
     el.style.width = `${size}px`;
     el.style.height = `${size}px`;
     el.style.left = `${Math.random() * 100}%`;
-    el.style.top = `${100 + Math.random() * 40}%`;
-    el.style.borderRadius = Math.random() > 0.55 ? '50%' : `${8 + Math.random() * 14}px`;
-    el.style.animationDuration = `${18 + Math.random() * 22}s`;
+    el.style.top = `${100 + Math.random() * 45}%`;
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : `${8 + Math.random() * 18}px`;
+    el.style.animationDuration = `${14 + Math.random() * 24}s`;
     el.style.animationDelay = `-${Math.random() * 20}s`;
 
     layer.appendChild(el);
@@ -369,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = document.getElementById('confessMessage')?.value.trim() || '';
 
     if (!name || !message) {
-      status.textContent = 'Điền đủ tên tuổi và lời nhắn đi đã.';
+      status.textContent = 'Điền đủ họ tên và lời nhắn đi đã.';
       status.className = 'confess-status error';
       return;
     }
@@ -401,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
       status.textContent = 'Đã tỏ tình và chờ đồng ý.';
       status.className = 'confess-status success';
     } catch (err) {
-      status.textContent = 'Gửi lỗi. Kiểm tra endpoint Telegram giúp tôi.';
+      status.textContent = 'Chưa thể gửi, mã lỗi LH36';
       status.className = 'confess-status error';
     } finally {
       submitBtn.disabled = false;
