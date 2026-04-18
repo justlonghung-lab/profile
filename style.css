@@ -1465,19 +1465,18 @@ body::after {
     transform: translateY(110px) scale(0.78) rotateX(20deg) rotateY(-14deg);
     filter: blur(16px);
   }
-  15% {
+  12% {
     opacity: 1;
-    transform: translateY(38px) scale(0.9) rotateX(14deg) rotateY(10deg);
-    filter: blur(8px);
-  }
-  35% {
-    transform: translateY(-14px) scale(1.025) rotateX(-6deg) rotateY(-4deg);
+    transform: translateY(42px) scale(0.9) rotateX(14deg) rotateY(10deg);
     filter: blur(0);
+  }
+  32% {
+    transform: translateY(-14px) scale(1.025) rotateX(-6deg) rotateY(-4deg);
   }
   55% {
     transform: translateY(8px) scale(0.992) rotateX(3.5deg) rotateY(2.5deg);
   }
-  72% {
+  74% {
     transform: translateY(-3px) scale(1.008) rotateX(-1.6deg) rotateY(-1.2deg);
   }
   100% {
@@ -1486,7 +1485,6 @@ body::after {
     filter: blur(0);
   }
 }
-
 @keyframes cardAuraIn {
   0% {
     opacity: 0;
