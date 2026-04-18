@@ -541,18 +541,66 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
     });
   }
 
-  function startSpawns() {
-    spawnItem('money');
-    spawnItem('bomb');
+ function startSpawns() {
+  spawnItem('money');
 
-    moneyInterval = setInterval(() => {
-      spawnItem('money');
-      if (Math.random() > 0.7) {
-        setTimeout(() => {
-          if (isPlaying) spawnItem('money');
-        }, 160);
+  moneyInterval = setInterval(() => {
+    if (!isPlaying) return;
+
+    spawnItem('money');
+
+    if (Math.random() > 0.72) {
+      setTimeout(() => {
+        if (isPlaying) spawnItem('money');
+      }, 150);
+    }
+
+    // fake tiền xuất hiện từ sau 3 giây đầu
+    if (timeLeft <= EASY_PHASE_END && Math.random() > 0.6) {
+      spawnItem('fakeMoney');
+    }
+  }, 430);
+
+  bombInterval = setInterval(() => {
+    if (!isPlaying) return;
+
+    // 3 giây đầu: rất dễ
+    if (timeLeft > EASY_PHASE_END) {
+      if (Math.random() > 0.82) {
+        spawnItem('bomb');
       }
-    }, 460);
+    }
+
+    // giữa game: bắt đầu khó hơn
+    else if (timeLeft > WARNING_PHASE_START) {
+      spawnItem('bomb');
+
+      if (Math.random() > 0.55) {
+        setTimeout(() => {
+          if (isPlaying) spawnItem('bomb');
+        }, 170);
+      }
+    }
+
+    // 3 giây cuối: dội bom + áp lực
+    else {
+      spawnItem('bomb');
+      spawnItem('bomb');
+
+      if (Math.random() > 0.35) {
+        setTimeout(() => {
+          if (isPlaying) spawnItem('bomb');
+        }, 110);
+      }
+
+      if (Math.random() > 0.75) {
+        setTimeout(() => {
+          if (isPlaying) spawnItem('fakeMoney');
+        }, 90);
+      }
+    }
+  }, 240);
+}
 
     bombInterval = setInterval(() => {
       spawnItem('bomb');
