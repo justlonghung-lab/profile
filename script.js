@@ -370,6 +370,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const NORMAL_SRC = gamePlayer.dataset.normal || 'phule.png';
   const HURT_SRC = gamePlayer.dataset.hurt || 'phuledau.png';
   const GAME_DURATION = 15;
+const EASY_PHASE_END = 12;     // 15 -> 12 = 3 giây đầu dễ
+const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
 
   let isOpen = false;
   let isPlaying = false;
