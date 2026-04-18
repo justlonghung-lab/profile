@@ -1164,3 +1164,36 @@ body::after {
     height: 36px;
   }
 }
+.game-stage.warning {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    inset 0 0 60px rgba(255,60,60,0.12),
+    0 0 0 1px rgba(255,90,90,0.18);
+  animation: warningPulse 0.55s ease-in-out infinite;
+}
+
+.game-stage.warning::before {
+  content: '⚠ CẢNH BÁO';
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 4;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 60, 60, 0.16);
+  border: 1px solid rgba(255, 120, 120, 0.32);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 0 18px rgba(255,80,80,0.16);
+}
+
+@keyframes warningPulse {
+  0%, 100% {
+    filter: saturate(1);
+  }
+  50% {
+    filter: saturate(1.22);
+  }
+}
