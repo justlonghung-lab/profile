@@ -670,15 +670,15 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
           itemBottom > playerTop &&
           itemTop < playerBottom;
 
-        if (hit) {
-          if (item.type === 'money') {
-            score += 1;
-            updateScoreUI();
-          } else {
-            score = Math.max(0, score - 2);
-            updateScoreUI();
-            triggerHurtSkin();
-          }
+       if (hit) {
+  if (item.type === 'money') {
+    score += 1;
+    updateScoreUI();
+  } else {
+    score = Math.max(0, score - 2);
+    updateScoreUI();
+    triggerHurtSkin();
+  }
 
           item.el.remove();
           return false;
