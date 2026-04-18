@@ -102,30 +102,34 @@ body::after {
 
 .geo {
   position: absolute;
-  border: 1px solid rgba(111, 211, 255, 0.22);
+  border: 1px solid rgba(111, 211, 255, 0.14);
   background: linear-gradient(
     135deg,
-    rgba(111, 211, 255, 0.24),
-    rgba(10, 132, 255, 0.09)
+    rgba(111, 211, 255, 0.18),
+    rgba(10, 132, 255, 0.06)
   );
   box-shadow:
-    inset 0 0 26px rgba(111, 211, 255, 0.12),
-    0 0 36px rgba(10, 132, 255, 0.14),
-    0 0 64px rgba(111, 211, 255, 0.06);
-  opacity: 0.55;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+    inset 0 0 20px rgba(111, 211, 255, 0.08),
+    0 0 30px rgba(10, 132, 255, 0.08);
+  opacity: 0.38;
   animation: floatGeo linear infinite;
 }
 
-10% {
-  opacity: 0.42;
-}
-40% {
-  opacity: 0.32;
-}
-75% {
-  opacity: 0.18;
+@keyframes floatGeo {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    transform: translateY(-125vh) rotate(360deg) scale(1.18);
+    opacity: 0;
+  }
 }
 
 /* ── SCENE ── */
@@ -485,7 +489,7 @@ body::after {
   position: relative;
   width: 100%;
   max-width: 440px;
-  padding: 14px 14px;
+  padding: 18px 16px;
   text-align: center;
   border-radius: 22px;
   transform: translateZ(18px);
@@ -867,7 +871,7 @@ body::after {
   position: relative;
   width: 100%;
   max-width: 440px;
-  padding: 16px 15px;
+  padding: 18px 16px;
   border-radius: 22px;
   overflow: hidden;
   isolation: isolate;
@@ -1394,146 +1398,80 @@ body::after {
   }
 
   .scene {
-    padding: 26px 18px 38px;
+    padding: 28px 14px 36px;
     align-items: flex-start;
-    justify-content: center;
+  }
+
+  .card {
+    max-width: 100%;
+    padding: 30px 16px 24px;
+    border-radius: 24px;
+    gap: 18px;
   }
 
   .card-frame {
     width: 100%;
-    max-width: 372px;
-    margin: 0 auto;
-  }
-
-  .card {
-    width: 100%;
-    max-width: 372px;
-    padding: 24px 14px 18px;
-    border-radius: 22px;
-    gap: 14px;
   }
 
   .avatar-block {
-    width: 102px;
-    height: 102px;
+    width: 122px;
+    height: 122px;
   }
 
   .avatar-wrap {
-    width: 102px;
-    height: 102px;
-  }
-
-  .avatar-orbit {
-    inset: -9px;
-  }
-
-  .orbit-dot {
-    width: 8px;
-    height: 8px;
+    width: 122px;
+    height: 122px;
   }
 
   .name {
-    font-size: clamp(1.08rem, 5.8vw, 1.5rem);
+    font-size: clamp(1.32rem, 7vw, 1.8rem);
     letter-spacing: -0.03em;
-    margin-bottom: 4px;
   }
 
   .job-title {
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
   }
 
   .bio {
-    font-size: 0.78rem;
-    line-height: 1.48;
+    font-size: 0.9rem;
+    line-height: 1.6;
   }
 
   .info,
   .confess-card {
     max-width: 100%;
-    padding: 12px 12px;
-    border-radius: 18px;
+    padding: 16px 14px;
   }
 
   .social-links {
     max-width: 100%;
-    gap: 7px;
+    gap: 8px;
   }
 
   .social-btn {
-    min-height: 38px;
-    font-size: 0.76rem;
-    padding: 8px 8px;
-    border-radius: 999px;
+    font-size: 0.8rem;
+    min-height: 42px;
+    padding: 10px 12px;
   }
 
   .action-row {
     max-width: 100%;
-    gap: 8px;
-    flex-wrap: nowrap;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
   .action-row .fund-btn {
     width: 100%;
-    min-width: 0;
   }
 
   .fund-btn {
-    font-size: 0.82rem;
-    padding: 11px 10px;
-    min-height: 44px;
-    gap: 8px;
-  }
-
-  .fund-icon {
-    font-size: 0.92rem;
-  }
-
-  .confess-title {
     font-size: 0.94rem;
-    margin-bottom: 8px;
-    letter-spacing: 0.04em;
-  }
-
-  .confess-form {
-    gap: 7px;
-  }
-
-  .confess-label {
-    font-size: 0.76rem;
-  }
-
-  .confess-input,
-  .confess-textarea {
-    font-size: 0.82rem;
-    padding: 10px 11px;
-    border-radius: 12px;
-  }
-
-  .confess-input {
-    min-height: 40px;
-  }
-
-  .confess-textarea {
-    min-height: 40px;
-    height: 40px;
-    max-height: 110px;
-  }
-
-  .confess-btn {
-    font-size: 0.86rem;
-    padding: 11px 14px;
-    min-height: 44px;
-  }
-
-  .confess-status {
-    font-size: 0.76rem;
-    min-height: 16px;
+    padding: 13px 16px;
   }
 
   .game-panel {
-    width: min(94vw, 720px);
+    width: min(96vw, 720px);
     padding: 14px 14px 12px;
     border-radius: 22px;
   }
@@ -1550,125 +1488,31 @@ body::after {
   }
 
   .game-stage {
-    height: min(56vh, 400px);
+    height: min(62vh, 440px);
     cursor: default;
   }
 
   .game-player {
-    width: 72px;
+    width: 82px;
   }
 
   .game-money,
   .game-bomb {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
   }
 
   .game-result-score-row {
-    gap: 10px;
+    gap: 12px;
     padding: 10px 12px;
   }
 
   .game-result-avatar {
-    width: 50px;
-    height: 50px;
+    width: 58px;
+    height: 58px;
   }
 
   .game-result-score-value strong {
-    font-size: 1.45rem;
-  }
-}
-@media (max-width: 640px) {
- .geo {
-  position: absolute;
-  border: 1px solid rgba(111, 211, 255, 0.12);
-  background: linear-gradient(
-    135deg,
-    rgba(111, 211, 255, 0.14),
-    rgba(10, 132, 255, 0.04)
-  );
-  box-shadow:
-    inset 0 0 22px rgba(111, 211, 255, 0.08),
-    0 0 34px rgba(10, 132, 255, 0.1);
-  opacity: 0.4;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  animation: floatGeo linear infinite;
-}
-.geo {
-  position: absolute;
-  border: 1px solid rgba(111, 211, 255, 0.12);
-  background: linear-gradient(
-    135deg,
-    rgba(111, 211, 255, 0.14),
-    rgba(10, 132, 255, 0.04)
-  );
-  box-shadow:
-    inset 0 0 22px rgba(111, 211, 255, 0.08),
-    0 0 34px rgba(10, 132, 255, 0.1);
-  opacity: 0.4;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  animation: floatGeo linear infinite;
-}
-
-@keyframes floatGeo {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(0.96);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.42;
-  }
-  40% {
-    opacity: 0.32;
-  }
-  75% {
-    opacity: 0.18;
-  }
-  100% {
-    transform: translateY(-125vh) rotate(360deg) scale(1.2);
-    opacity: 0;
-  }
-}
-.geo-layer {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.geo {
-  position: absolute;
-  border: 1px solid rgba(111, 211, 255, 0.14);
-  background: linear-gradient(
-    135deg,
-    rgba(111, 211, 255, 0.12),
-    rgba(10, 132, 255, 0.035)
-  );
-  box-shadow:
-    inset 0 0 18px rgba(111, 211, 255, 0.05),
-    0 0 24px rgba(10, 132, 255, 0.06);
-  opacity: 0.28;
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
-  animation: floatGeo linear infinite;
-}
-
-@keyframes floatGeo {
-  0% {
-    transform: translateY(18px) rotate(0deg) scale(0.96);
-    opacity: 0;
-  }
-  12% {
-    opacity: 0.28;
-  }
-  50% {
-    opacity: 0.18;
-  }
-  100% {
-    transform: translateY(-42px) rotate(18deg) scale(1.05);
-    opacity: 0;
+    font-size: 1.75rem;
   }
 }
