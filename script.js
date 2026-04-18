@@ -337,7 +337,7 @@ document.addEventListener('click', (e) => {
 });
 
 /* =============================
-   MINI GAME: HUNG TIEN
+   MINI GAME: HUNG TIEN + BOM
 ============================= */
 document.addEventListener('DOMContentLoaded', function () {
   const gameBtn = document.getElementById('gameBtn');
@@ -346,20 +346,44 @@ document.addEventListener('DOMContentLoaded', function () {
   const gameStage = document.getElementById('gameStage');
   const gamePlayer = document.getElementById('gamePlayer');
   const gameScore = document.getElementById('gameScore');
+  const gameTimer = document.getElementById('gameTimer');
+  const gameResult = document.getElementById('gameResult');
+  const gameFinalScore = document.getElementById('gameFinalScore');
+  const gameRestart = document.getElementById('gameRestart');
 
-  if (!gameBtn || !gameModal || !gameClose || !gameStage || !gamePlayer || !gameScore) {
+  if (
+    !gameBtn ||
+    !gameModal ||
+    !gameClose ||
+    !gameStage ||
+    !gamePlayer ||
+    !gameScore ||
+    !gameTimer ||
+    !gameResult ||
+    !gameFinalScore ||
+    !gameRestart
+  ) {
     console.log('Mini game missing elements');
     return;
   }
 
+  const NORMAL_SRC = gamePlayer.dataset.normal || 'phule.png';
+  const HURT_SRC = gamePlayer.dataset.hurt || 'phuledau.png';
+  const GAME_DURATION = 15;
+
   let isOpen = false;
+  let isPlaying = false;
   let score = 0;
   let playerX = 0;
   let targetX = 0;
   let stageRect = null;
-  let moneyList = [];
-  let spawnInterval = null;
+  let fallingItems = [];
+  let moneyInterval = null;
+  let bombInterval = null;
   let loopId = null;
+  let timeLeft = GAME_DURATION;
+  let countdownInterval = null;
+  let hurtTimeout = null;
 
   function updateRect() {
     stageRect = gameStage.getBoundingClientRect();
@@ -369,18 +393,72 @@ document.addEventListener('DOMContentLoaded', function () {
     gamePlayer.style.left = playerX + 'px';
   }
 
-  function clearMoney() {
-    moneyList.forEach(item => item.el.remove());
-    moneyList = [];
+  function clearItems() {
+    fallingItems.forEach(item => item.el.remove());
+    fallingItems = [];
+  }
+
+  function resetPlayerSkin() {
+    if (hurtTimeout) {
+      clearTimeout(hurtTimeout);
+      hurtTimeout = null;
+    }
+    gamePlayer.src = NORMAL_SRC;
+    gamePlayer.classList.remove('hurt');
+  }
+
+  function triggerHurtSkin() {
+    if (hurtTimeout) clearTimeout(hurtTimeout);
+
+    gamePlayer.src = HURT_SRC;
+    gamePlayer.classList.add('hurt');
+    gameStage.classList.remove('shake');
+    void gameStage.offsetWidth;
+    gameStage.classList.add('shake');
+
+    hurtTimeout = setTimeout(() => {
+      gamePlayer.src = NORMAL_SRC;
+      gamePlayer.classList.remove('hurt');
+    }, 700);
+  }
+
+  function updateScoreUI() {
+    gameScore.textContent = String(score);
+  }
+
+  function updateTimerUI() {
+    gameTimer.textContent = String(timeLeft);
   }
 
   function openGame() {
     isOpen = true;
-    score = 0;
-    gameScore.textContent = '0';
     gameModal.classList.add('show');
     gameModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
+    startGame();
+  }
+
+  function closeGame() {
+    isOpen = false;
+    isPlaying = false;
+    gameModal.classList.remove('show');
+    gameModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+
+    stopTimers();
+    stopLoop();
+    clearItems();
+    resetPlayerSkin();
+    gameResult.classList.remove('show');
+  }
+
+  function startGame() {
+    isPlaying = true;
+    score = 0;
+    timeLeft = GAME_DURATION;
+    updateScoreUI();
+    updateTimerUI();
+    gameResult.classList.remove('show');
 
     updateRect();
 
@@ -388,65 +466,119 @@ document.addEventListener('DOMContentLoaded', function () {
     targetX = playerX;
     renderPlayer();
 
-    clearMoney();
-    startSpawn();
+    clearItems();
+    resetPlayerSkin();
+
+    startSpawns();
+    startCountdown();
     startLoop();
   }
 
-  function closeGame() {
-    isOpen = false;
-    gameModal.classList.remove('show');
-    gameModal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+  function endGame() {
+    isPlaying = false;
+    stopTimers();
+    stopLoop();
+    clearItems();
+    resetPlayerSkin();
 
-    if (spawnInterval) {
-      clearInterval(spawnInterval);
-      spawnInterval = null;
+    gameFinalScore.textContent = String(score);
+    gameResult.classList.add('show');
+  }
+
+  function stopTimers() {
+    if (moneyInterval) {
+      clearInterval(moneyInterval);
+      moneyInterval = null;
     }
+    if (bombInterval) {
+      clearInterval(bombInterval);
+      bombInterval = null;
+    }
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+  }
 
+  function stopLoop() {
     if (loopId) {
       cancelAnimationFrame(loopId);
       loopId = null;
     }
-
-    clearMoney();
   }
 
-  function spawnMoney() {
-    if (!isOpen || !stageRect) return;
+  function spawnItem(type) {
+    if (!isPlaying || !stageRect) return;
 
     const el = document.createElement('div');
-    el.className = 'game-money';
-    el.textContent = '💸';
+    const isBomb = type === 'bomb';
+    el.className = isBomb ? 'game-bomb' : 'game-money';
+    el.textContent = isBomb ? '💣' : '💸';
 
-    const size = 34 + Math.random() * 12;
+    const size = isBomb
+      ? 30 + Math.random() * 14
+      : 34 + Math.random() * 12;
+
     const x = Math.random() * Math.max(40, stageRect.width - size - 20);
 
     el.style.width = size + 'px';
     el.style.height = size + 'px';
-    el.style.fontSize = (size - 4) + 'px';
+    el.style.fontSize = (size - 2) + 'px';
 
     gameStage.appendChild(el);
 
-    moneyList.push({
+    fallingItems.push({
       el: el,
+      type: type,
       x: x,
       y: -size,
       size: size,
-      speed: 2 + Math.random() * 2
+      speed: isBomb
+        ? 5.8 + Math.random() * 3.6
+        : 2.2 + Math.random() * 1.8
     });
   }
 
-  function startSpawn() {
-    spawnMoney();
-    spawnInterval = setInterval(spawnMoney, 500);
+  function startSpawns() {
+    spawnItem('money');
+    spawnItem('bomb');
+
+    moneyInterval = setInterval(() => {
+      spawnItem('money');
+      if (Math.random() > 0.7) {
+        setTimeout(() => {
+          if (isPlaying) spawnItem('money');
+        }, 160);
+      }
+    }, 460);
+
+    bombInterval = setInterval(() => {
+      spawnItem('bomb');
+      spawnItem('bomb');
+      if (Math.random() > 0.45) {
+        setTimeout(() => {
+          if (isPlaying) spawnItem('bomb');
+        }, 120);
+      }
+    }, 240);
+  }
+
+  function startCountdown() {
+    countdownInterval = setInterval(() => {
+      timeLeft -= 1;
+      updateTimerUI();
+
+      if (timeLeft <= 0) {
+        endGame();
+      }
+    }, 1000);
   }
 
   function startLoop() {
     function loop() {
-      if (!isOpen || !stageRect) return;
+      if (!isPlaying || !stageRect) return;
 
-      playerX += (targetX - playerX) * 0.18;
+      playerX += (targetX - playerX) * 0.2;
       renderPlayer();
 
       const playerWidth = gamePlayer.offsetWidth;
@@ -456,7 +588,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const playerTop = stageRect.height - playerHeight - 18;
       const playerBottom = stageRect.height;
 
-      moneyList = moneyList.filter(item => {
+      fallingItems = fallingItems.filter(item => {
         item.y += item.speed;
         item.el.style.transform = `translate(${item.x}px, ${item.y}px)`;
 
@@ -472,13 +604,20 @@ document.addEventListener('DOMContentLoaded', function () {
           itemTop < playerBottom;
 
         if (hit) {
-          score += 1;
-          gameScore.textContent = String(score);
+          if (item.type === 'money') {
+            score += 1;
+            updateScoreUI();
+          } else {
+            score = Math.max(0, score - 2);
+            updateScoreUI();
+            triggerHurtSkin();
+          }
+
           item.el.remove();
           return false;
         }
 
-        if (item.y > stageRect.height + 60) {
+        if (item.y > stageRect.height + 80) {
           item.el.remove();
           return false;
         }
@@ -494,7 +633,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   gameBtn.addEventListener('click', function (e) {
     e.preventDefault();
-    openGame();
+    if (!isOpen) {
+      openGame();
+    }
   });
 
   gameClose.addEventListener('click', function () {
@@ -507,6 +648,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+  gameRestart.addEventListener('click', function () {
+    startGame();
+  });
+
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && isOpen) {
       closeGame();
@@ -515,7 +660,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   gameStage.addEventListener('mousemove', function (e) {
     if (!stageRect) updateRect();
-
     const half = gamePlayer.offsetWidth / 2;
     let x = e.clientX - stageRect.left;
     x = Math.max(half, Math.min(stageRect.width - half, x));
