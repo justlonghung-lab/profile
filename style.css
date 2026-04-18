@@ -137,10 +137,11 @@ body::after {
   position: relative;
   z-index: 2;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: clamp(24px, 4vh, 40px) clamp(18px, 3vw, 24px);
   perspective: 1800px;
   overflow: visible;
 }
@@ -157,8 +158,9 @@ body::after {
 .card {
   position: relative;
   z-index: 1;
-  width: 100%;
+  width: min(100%, 560px);
   max-width: 560px;
+  max-height: none;
   padding: 52px 34px 40px;
   border-radius: 34px;
   display: flex;
@@ -181,7 +183,6 @@ body::after {
   animation: cardEntrance 5s cubic-bezier(.16,1,.3,1) both;
   transform-origin: center center;
 }
-
 .card::before {
   content: '';
   position: absolute;
@@ -1580,5 +1581,66 @@ body::after {
 
   .game-result-score-value strong {
     font-size: 1.45rem;
+  }
+}
+@media (max-height: 820px) {
+  .scene {
+    align-items: flex-start;
+    padding-top: 24px;
+    padding-bottom: 28px;
+  }
+
+  .card {
+    gap: 18px;
+    padding: 34px 22px 26px;
+  }
+
+  .avatar-block {
+    width: 120px;
+    height: 120px;
+  }
+
+  .avatar-wrap {
+    width: 120px;
+    height: 120px;
+  }
+
+  .info,
+  .confess-card {
+    padding: 14px 14px;
+  }
+
+  .bio {
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .social-btn {
+    min-height: 40px;
+    padding: 9px 12px;
+  }
+
+  .fund-btn {
+    min-height: 46px;
+    padding: 12px 16px;
+    font-size: 0.92rem;
+  }
+}
+@media (max-height: 720px) {
+  .card-frame {
+    transform: scale(0.92);
+    transform-origin: top center;
+  }
+
+  .scene {
+    align-items: flex-start;
+    padding-top: 12px;
+    padding-bottom: 18px;
+  }
+}
+
+@media (max-height: 660px) {
+  .card-frame {
+    transform: scale(0.86);
   }
 }
