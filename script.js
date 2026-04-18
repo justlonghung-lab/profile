@@ -510,36 +510,46 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
   }
 
   function spawnItem(type) {
-    if (!isPlaying || !stageRect) return;
+  if (!isPlaying || !stageRect) return;
 
-    const el = document.createElement('div');
-    const isBomb = type === 'bomb';
-    el.className = isBomb ? 'game-bomb' : 'game-money';
-    el.textContent = isBomb ? '💣' : '💸';
+  const el = document.createElement('div');
+  const isBomb = type === 'bomb';
+  const isFakeMoney = type === 'fakeMoney';
 
-    const size = isBomb
-      ? 30 + Math.random() * 14
-      : 34 + Math.random() * 12;
+  el.className = isBomb ? 'game-bomb' : 'game-money';
+  el.textContent = isBomb ? '💣' : '💸';
 
-    const x = Math.random() * Math.max(40, stageRect.width - size - 20);
+  const size = isBomb
+    ? 30 + Math.random() * 14
+    : 34 + Math.random() * 12;
 
-    el.style.width = size + 'px';
-    el.style.height = size + 'px';
-    el.style.fontSize = (size - 2) + 'px';
+  const x = Math.random() * Math.max(40, stageRect.width - size - 20);
 
-    gameStage.appendChild(el);
+  el.style.width = size + 'px';
+  el.style.height = size + 'px';
+  el.style.fontSize = (size - 2) + 'px';
 
-    fallingItems.push({
-      el: el,
-      type: type,
-      x: x,
-      y: -size,
-      size: size,
-      speed: isBomb
-        ? 5.8 + Math.random() * 3.6
+  gameStage.appendChild(el);
+
+  fallingItems.push({
+    el: el,
+    type: type,
+    x: x,
+    y: -size,
+    size: size,
+    flipped: false,
+    flipAtY: stageRect.height - 150 - Math.random() * 60,
+    speed: isBomb
+      ? (timeLeft > EASY_PHASE_END
+          ? 2.8 + Math.random() * 1.2
+          : timeLeft > WARNING_PHASE_START
+            ? 5.4 + Math.random() * 2.2
+            : 7.2 + Math.random() * 3.2)
+      : isFakeMoney
+        ? 3.2 + Math.random() * 1.6
         : 2.2 + Math.random() * 1.8
-    });
-  }
+  });
+}
 
  function startSpawns() {
   spawnItem('money');
