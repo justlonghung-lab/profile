@@ -489,7 +489,7 @@ body::after {
   position: relative;
   width: 100%;
   max-width: 440px;
-  padding: 18px 16px;
+  padding: 14px 14px;
   text-align: center;
   border-radius: 22px;
   transform: translateZ(18px);
@@ -871,7 +871,7 @@ body::after {
   position: relative;
   width: 100%;
   max-width: 440px;
-  padding: 18px 16px;
+  padding: 16px 15px;
   border-radius: 22px;
   overflow: hidden;
   isolation: isolate;
@@ -1398,115 +1398,142 @@ body::after {
   }
 
   .scene {
-    padding: 34px 22px 44px;
+    padding: 26px 18px 38px;
     align-items: flex-start;
+    justify-content: center;
   }
 
   .card-frame {
-  max-width: 400px;
-}
+    width: 100%;
+    max-width: 372px;
+    margin: 0 auto;
+  }
 
-.card {
-  max-width: 400px;
-}
+  .card {
+    width: 100%;
+    max-width: 372px;
+    padding: 24px 14px 18px;
+    border-radius: 22px;
+    gap: 14px;
+  }
 
   .avatar-block {
-    width: 112px;
-    height: 112px;
+    width: 102px;
+    height: 102px;
   }
 
   .avatar-wrap {
-    width: 112px;
-    height: 112px;
+    width: 102px;
+    height: 102px;
   }
 
   .avatar-orbit {
-    inset: -10px;
+    inset: -9px;
+  }
+
+  .orbit-dot {
+    width: 8px;
+    height: 8px;
   }
 
   .name {
-    font-size: clamp(1.18rem, 6.2vw, 1.65rem);
+    font-size: clamp(1.08rem, 5.8vw, 1.5rem);
     letter-spacing: -0.03em;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .job-title {
-    font-size: 0.76rem;
-    letter-spacing: 0.12em;
-    margin-bottom: 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
   }
 
   .bio {
-    font-size: 0.82rem;
-    line-height: 1.55;
+    font-size: 0.78rem;
+    line-height: 1.48;
   }
 
   .info,
   .confess-card {
     max-width: 100%;
-    padding: 14px 14px;
-    border-radius: 20px;
+    padding: 12px 12px;
+    border-radius: 18px;
   }
 
   .social-links {
     max-width: 100%;
-    gap: 8px;
+    gap: 7px;
   }
 
   .social-btn {
-    min-height: 40px;
-    font-size: 0.78rem;
-    padding: 9px 10px;
+    min-height: 38px;
+    font-size: 0.76rem;
+    padding: 8px 8px;
+    border-radius: 999px;
   }
 
   .action-row {
     max-width: 100%;
-    gap: 10px;
-    flex-wrap: wrap;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .action-row .fund-btn {
     width: 100%;
+    min-width: 0;
   }
 
   .fund-btn {
-    font-size: 0.9rem;
-    padding: 12px 14px;
-    min-height: 48px;
+    font-size: 0.82rem;
+    padding: 11px 10px;
+    min-height: 44px;
+    gap: 8px;
   }
 
   .fund-icon {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .confess-title {
-    font-size: 1rem;
-    margin-bottom: 12px;
+    font-size: 0.94rem;
+    margin-bottom: 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .confess-form {
+    gap: 7px;
   }
 
   .confess-label {
-    font-size: 0.8rem;
+    font-size: 0.76rem;
   }
 
   .confess-input,
   .confess-textarea {
-    font-size: 0.88rem;
-    padding: 11px 12px;
-    border-radius: 14px;
+    font-size: 0.82rem;
+    padding: 10px 11px;
+    border-radius: 12px;
+  }
+
+  .confess-input {
+    min-height: 40px;
   }
 
   .confess-textarea {
-    min-height: 46px;
-    height: 46px;
+    min-height: 40px;
+    height: 40px;
+    max-height: 110px;
   }
 
   .confess-btn {
-    font-size: 0.9rem;
-    padding: 12px 16px;
+    font-size: 0.86rem;
+    padding: 11px 14px;
+    min-height: 44px;
   }
 
   .confess-status {
-    font-size: 0.8rem;
+    font-size: 0.76rem;
+    min-height: 16px;
   }
 
   .game-panel {
@@ -1527,18 +1554,18 @@ body::after {
   }
 
   .game-stage {
-    height: min(58vh, 420px);
+    height: min(56vh, 400px);
     cursor: default;
   }
 
   .game-player {
-    width: 76px;
+    width: 72px;
   }
 
   .game-money,
   .game-bomb {
-    width: 34px;
-    height: 34px;
+    width: 32px;
+    height: 32px;
   }
 
   .game-result-score-row {
@@ -1547,11 +1574,11 @@ body::after {
   }
 
   .game-result-avatar {
-    width: 54px;
-    height: 54px;
+    width: 50px;
+    height: 50px;
   }
 
   .game-result-score-value strong {
-    font-size: 1.6rem;
+    font-size: 1.45rem;
   }
 }
