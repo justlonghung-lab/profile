@@ -1595,3 +1595,39 @@ body::after {
   -webkit-backdrop-filter: blur(2px);
   animation: floatGeo linear infinite;
 }
+.geo {
+  position: absolute;
+  border: 1px solid rgba(111, 211, 255, 0.12);
+  background: linear-gradient(
+    135deg,
+    rgba(111, 211, 255, 0.14),
+    rgba(10, 132, 255, 0.04)
+  );
+  box-shadow:
+    inset 0 0 22px rgba(111, 211, 255, 0.08),
+    0 0 34px rgba(10, 132, 255, 0.1);
+  opacity: 0.4;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  animation: floatGeo linear infinite;
+}
+
+@keyframes floatGeo {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(0.96);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.42;
+  }
+  40% {
+    opacity: 0.32;
+  }
+  75% {
+    opacity: 0.18;
+  }
+  100% {
+    transform: translateY(-125vh) rotate(360deg) scale(1.2);
+    opacity: 0;
+  }
+}
