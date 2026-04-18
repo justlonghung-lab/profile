@@ -16,6 +16,7 @@ document.addEventListener('mousemove', (e) => {
 ============================= */
 (function setupBg() {
   const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
   function resize() {
@@ -96,6 +97,8 @@ document.addEventListener('mousemove', (e) => {
 ============================= */
 (function setupGeo() {
   const layer = document.getElementById('geoLayer');
+  if (!layer) return;
+
   const count = 26;
 
   for (let i = 0; i < count; i++) {
@@ -158,6 +161,7 @@ document.addEventListener('mousemove', (e) => {
 (function setupTilt() {
   const card = document.getElementById('card');
   const frame = document.querySelector('.card-frame');
+  if (!card || !frame) return;
 
   let targetRX = 0;
   let targetRY = 0;
@@ -208,102 +212,103 @@ document.addEventListener('mousemove', (e) => {
 /* =============================
    FIREWORKS FAST
 ============================= */
-const fwCanvas = document.getElementById('fw-canvas');
-const fwCtx = fwCanvas.getContext('2d');
-let fwParticles = [];
+(function setupFireworks() {
+  const fwCanvas = document.getElementById('fw-canvas');
+  const fundBtn = document.getElementById('fundBtn');
+  if (!fwCanvas || !fundBtn) return;
 
-function fwResize() {
-  fwCanvas.width = window.innerWidth;
-  fwCanvas.height = window.innerHeight;
-}
-fwResize();
-window.addEventListener('resize', fwResize);
+  const fwCtx = fwCanvas.getContext('2d');
+  let fwParticles = [];
 
-class FWParticle {
-  constructor(x, y, color) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 7 + 3;
-
-    this.x = x;
-    this.y = y;
-    this.vx = Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed;
-    this.alpha = 1;
-    this.decay = Math.random() * 0.017 + 0.012;
-    this.radius = Math.random() * 2.8 + 1.4;
-    this.gravity = 0.11;
-    this.color = color;
-    this.trail = [];
+  function fwResize() {
+    fwCanvas.width = window.innerWidth;
+    fwCanvas.height = window.innerHeight;
   }
+  fwResize();
+  window.addEventListener('resize', fwResize);
 
-  update() {
-    this.trail.push({ x: this.x, y: this.y });
-    if (this.trail.length > 6) this.trail.shift();
+  class FWParticle {
+    constructor(x, y, color) {
+      const angle = Math.random() * Math.PI * 2;
+      const speed = Math.random() * 7 + 3;
 
-    this.vy += this.gravity;
-    this.x += this.vx;
-    this.y += this.vy;
-    this.vx *= 0.985;
-    this.alpha -= this.decay;
-  }
+      this.x = x;
+      this.y = y;
+      this.vx = Math.cos(angle) * speed;
+      this.vy = Math.sin(angle) * speed;
+      this.alpha = 1;
+      this.decay = Math.random() * 0.017 + 0.012;
+      this.radius = Math.random() * 2.8 + 1.4;
+      this.gravity = 0.11;
+      this.color = color;
+      this.trail = [];
+    }
 
-  draw() {
-    this.trail.forEach((t, i) => {
-      const a = (i / this.trail.length) * this.alpha * 0.45;
+    update() {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 6) this.trail.shift();
+
+      this.vy += this.gravity;
+      this.x += this.vx;
+      this.y += this.vy;
+      this.vx *= 0.985;
+      this.alpha -= this.decay;
+    }
+
+    draw() {
+      this.trail.forEach((t, i) => {
+        const a = (i / this.trail.length) * this.alpha * 0.45;
+        fwCtx.beginPath();
+        fwCtx.arc(t.x, t.y, this.radius * (i / this.trail.length), 0, Math.PI * 2);
+        fwCtx.fillStyle = this.color.replace(',1)', `,${a})`);
+        fwCtx.fill();
+      });
+
       fwCtx.beginPath();
-      fwCtx.arc(t.x, t.y, this.radius * (i / this.trail.length), 0, Math.PI * 2);
-      fwCtx.fillStyle = this.color.replace(',1)', `,${a})`);
+      fwCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+      fwCtx.fillStyle = this.color.replace(',1)', `,${this.alpha})`);
       fwCtx.fill();
+    }
+
+    dead() {
+      return this.alpha <= 0;
+    }
+  }
+
+  const FW_COLORS = [
+    'rgba(111,211,255,1)',
+    'rgba(10,132,255,1)',
+    'rgba(255,255,255,1)',
+    'rgba(0,180,255,1)',
+    'rgba(160,235,255,1)'
+  ];
+
+  function fwExplode(x, y) {
+    const color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
+    for (let i = 0; i < 92; i++) fwParticles.push(new FWParticle(x, y, color));
+    for (let i = 0; i < 18; i++) fwParticles.push(new FWParticle(x, y, 'rgba(255,255,255,1)'));
+  }
+
+  function fwLoop() {
+    fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
+    fwParticles = fwParticles.filter((p) => !p.dead());
+    fwParticles.forEach((p) => {
+      p.update();
+      p.draw();
     });
-
-    fwCtx.beginPath();
-    fwCtx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    fwCtx.fillStyle = this.color.replace(',1)', `,${this.alpha})`);
-    fwCtx.fill();
+    requestAnimationFrame(fwLoop);
   }
+  fwLoop();
 
-  dead() {
-    return this.alpha <= 0;
-  }
-}
+  fundBtn.addEventListener('click', () => {
+    const x = window.innerWidth * (0.42 + Math.random() * 0.16);
+    const y = window.innerHeight * (0.28 + Math.random() * 0.08);
 
-const FW_COLORS = [
-  'rgba(111,211,255,1)',
-  'rgba(10,132,255,1)',
-  'rgba(255,255,255,1)',
-  'rgba(0,180,255,1)',
-  'rgba(160,235,255,1)'
-];
-
-function fwExplode(x, y) {
-  const color = FW_COLORS[Math.floor(Math.random() * FW_COLORS.length)];
-  for (let i = 0; i < 92; i++) {
-    fwParticles.push(new FWParticle(x, y, color));
-  }
-  for (let i = 0; i < 18; i++) {
-    fwParticles.push(new FWParticle(x, y, 'rgba(255,255,255,1)'));
-  }
-}
-
-function fwLoop() {
-  fwCtx.clearRect(0, 0, fwCanvas.width, fwCanvas.height);
-  fwParticles = fwParticles.filter((p) => !p.dead());
-  fwParticles.forEach((p) => {
-    p.update();
-    p.draw();
+    fwExplode(x, y);
+    setTimeout(() => fwExplode(x - 120, y + 30), 90);
+    setTimeout(() => fwExplode(x + 120, y + 20), 180);
   });
-  requestAnimationFrame(fwLoop);
-}
-fwLoop();
-
-document.getElementById('fundBtn').addEventListener('click', () => {
-  const x = window.innerWidth * (0.42 + Math.random() * 0.16);
-  const y = window.innerHeight * (0.28 + Math.random() * 0.08);
-
-  fwExplode(x, y);
-  setTimeout(() => fwExplode(x - 120, y + 30), 90);
-  setTimeout(() => fwExplode(x + 120, y + 20), 180);
-});
+})();
 
 /* =============================
    GLOBAL RIPPLE
@@ -337,7 +342,7 @@ document.addEventListener('click', (e) => {
 });
 
 /* =============================
-   MINI GAME: HUNG TIEN + BOM
+   MINI GAME: MONEY + BOMB + FAKE
 ============================= */
 document.addEventListener('DOMContentLoaded', function () {
   const gameBtn = document.getElementById('gameBtn');
@@ -352,16 +357,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const gameRestart = document.getElementById('gameRestart');
 
   if (
-    !gameBtn ||
-    !gameModal ||
-    !gameClose ||
-    !gameStage ||
-    !gamePlayer ||
-    !gameScore ||
-    !gameTimer ||
-    !gameResult ||
-    !gameFinalScore ||
-    !gameRestart
+    !gameBtn || !gameModal || !gameClose || !gameStage || !gamePlayer ||
+    !gameScore || !gameTimer || !gameResult || !gameFinalScore || !gameRestart
   ) {
     console.log('Mini game missing elements');
     return;
@@ -370,8 +367,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const NORMAL_SRC = gamePlayer.dataset.normal || 'phule.png';
   const HURT_SRC = gamePlayer.dataset.hurt || 'phuledau.png';
   const GAME_DURATION = 15;
-const EASY_PHASE_END = 12;     // 15 -> 12 = 3 giây đầu dễ
-const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
+  const EASY_PHASE_END = 12;
+  const WARNING_PHASE_START = 3;
 
   let isOpen = false;
   let isPlaying = false;
@@ -392,7 +389,7 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
   }
 
   function renderPlayer() {
-    gamePlayer.style.left = playerX + 'px';
+    gamePlayer.style.left = `${playerX}px`;
   }
 
   function clearItems() {
@@ -429,14 +426,14 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
   }
 
   function updateTimerUI() {
-  gameTimer.textContent = String(timeLeft);
+    gameTimer.textContent = String(timeLeft);
 
-  if (timeLeft <= WARNING_PHASE_START) {
-    gameStage.classList.add('warning');
-  } else {
-    gameStage.classList.remove('warning');
+    if (timeLeft <= WARNING_PHASE_START) {
+      gameStage.classList.add('warning');
+    } else {
+      gameStage.classList.remove('warning');
+    }
   }
-}
 
   function openGame() {
     isOpen = true;
@@ -458,6 +455,7 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
     clearItems();
     resetPlayerSkin();
     gameResult.classList.remove('show');
+    gameStage.classList.remove('warning');
   }
 
   function startGame() {
@@ -516,115 +514,93 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
   }
 
   function spawnItem(type) {
-  if (!isPlaying || !stageRect) return;
+    if (!isPlaying || !stageRect) return;
 
-  const el = document.createElement('div');
-  const isBomb = type === 'bomb';
-  const isFakeMoney = type === 'fakeMoney';
+    const el = document.createElement('div');
+    const isBomb = type === 'bomb';
+    const isFakeMoney = type === 'fakeMoney';
 
-  el.className = isBomb ? 'game-bomb' : 'game-money';
-  el.textContent = isBomb ? '💣' : '💸';
+    el.className = isBomb ? 'game-bomb' : 'game-money';
+    el.textContent = isBomb ? '💣' : '💸';
 
-  const size = isBomb
-    ? 30 + Math.random() * 14
-    : 34 + Math.random() * 12;
+    const size = isBomb ? 30 + Math.random() * 14 : 34 + Math.random() * 12;
+    const x = Math.random() * Math.max(40, stageRect.width - size - 20);
 
-  const x = Math.random() * Math.max(40, stageRect.width - size - 20);
+    el.style.width = `${size}px`;
+    el.style.height = `${size}px`;
+    el.style.fontSize = `${size - 2}px`;
 
-  el.style.width = size + 'px';
-  el.style.height = size + 'px';
-  el.style.fontSize = (size - 2) + 'px';
+    gameStage.appendChild(el);
 
-  gameStage.appendChild(el);
+    fallingItems.push({
+      el,
+      type,
+      x,
+      y: -size,
+      size,
+      flipped: false,
+      flipAtY: stageRect.height - 150 - Math.random() * 60,
+      speed: isBomb
+        ? (timeLeft > EASY_PHASE_END
+            ? 3.0 + Math.random() * 1.2
+            : timeLeft > WARNING_PHASE_START
+              ? 5.4 + Math.random() * 2.2
+              : 7.2 + Math.random() * 3.2)
+        : isFakeMoney
+          ? 3.2 + Math.random() * 1.6
+          : 2.2 + Math.random() * 1.8
+    });
+  }
 
-  fallingItems.push({
-    el: el,
-    type: type,
-    x: x,
-    y: -size,
-    size: size,
-    flipped: false,
-    flipAtY: stageRect.height - 150 - Math.random() * 60,
-    speed: isBomb
-      ? (timeLeft > EASY_PHASE_END
-          ? 2.8 + Math.random() * 1.2
-          : timeLeft > WARNING_PHASE_START
-            ? 5.4 + Math.random() * 2.2
-            : 7.2 + Math.random() * 3.2)
-      : isFakeMoney
-        ? 3.2 + Math.random() * 1.6
-        : 2.2 + Math.random() * 1.8
-  });
-}
-
- function startSpawns() {
-  spawnItem('money');
-
-  moneyInterval = setInterval(() => {
-    if (!isPlaying) return;
-
+  function startSpawns() {
     spawnItem('money');
 
-    if (Math.random() > 0.72) {
-      setTimeout(() => {
-        if (isPlaying) spawnItem('money');
-      }, 150);
-    }
+    moneyInterval = setInterval(() => {
+      if (!isPlaying) return;
 
-    // fake tiền xuất hiện từ sau 3 giây đầu
-    if (timeLeft <= EASY_PHASE_END && Math.random() > 0.6) {
-      spawnItem('fakeMoney');
-    }
-  }, 430);
+      spawnItem('money');
 
-  bombInterval = setInterval(() => {
-    if (!isPlaying) return;
-
-    // 3 giây đầu: rất dễ
-    if (timeLeft > EASY_PHASE_END) {
-      if (Math.random() > 0.82) {
-        spawnItem('bomb');
-      }
-    }
-
-    // giữa game: bắt đầu khó hơn
-    else if (timeLeft > WARNING_PHASE_START) {
-      spawnItem('bomb');
-
-      if (Math.random() > 0.55) {
+      if (Math.random() > 0.72) {
         setTimeout(() => {
-          if (isPlaying) spawnItem('bomb');
-        }, 170);
-      }
-    }
-
-    // 3 giây cuối: dội bom + áp lực
-    else {
-      spawnItem('bomb');
-      spawnItem('bomb');
-
-      if (Math.random() > 0.35) {
-        setTimeout(() => {
-          if (isPlaying) spawnItem('bomb');
-        }, 110);
+          if (isPlaying) spawnItem('money');
+        }, 150);
       }
 
-      if (Math.random() > 0.75) {
-        setTimeout(() => {
-          if (isPlaying) spawnItem('fakeMoney');
-        }, 90);
+      if (timeLeft <= EASY_PHASE_END && Math.random() > 0.6) {
+        spawnItem('fakeMoney');
       }
-    }
-  }, 240);
-}
+    }, 430);
 
     bombInterval = setInterval(() => {
-      spawnItem('bomb');
-      spawnItem('bomb');
-      if (Math.random() > 0.45) {
-        setTimeout(() => {
-          if (isPlaying) spawnItem('bomb');
-        }, 120);
+      if (!isPlaying) return;
+
+      if (timeLeft > EASY_PHASE_END) {
+        if (Math.random() > 0.82) {
+          spawnItem('bomb');
+        }
+      } else if (timeLeft > WARNING_PHASE_START) {
+        spawnItem('bomb');
+
+        if (Math.random() > 0.55) {
+          setTimeout(() => {
+            if (isPlaying) spawnItem('bomb');
+          }, 170);
+        }
+      } else {
+        spawnItem('bomb');
+        spawnItem('bomb');
+
+        if (Math.random() > 0.35) {
+          setTimeout(() => {
+            if (isPlaying) spawnItem('bomb');
+          }, 110);
+        }
+
+        if (Math.random() > 0.75) {
+          setTimeout(() => {
+            if (isPlaying) spawnItem('fakeMoney');
+          }, 90);
+        }
       }
     }, 240);
   }
@@ -656,13 +632,15 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
 
       fallingItems = fallingItems.filter(item => {
         item.y += item.speed;
-         if (item.type === 'fakeMoney' && !item.flipped && item.y >= item.flipAtY) {
-  item.flipped = true;
-  item.type = 'bomb';
-  item.el.textContent = '💣';
-  item.el.className = 'game-bomb';
-  item.speed += 2.4;
-}
+
+        if (item.type === 'fakeMoney' && !item.flipped && item.y >= item.flipAtY) {
+          item.flipped = true;
+          item.type = 'bomb';
+          item.el.textContent = '💣';
+          item.el.className = 'game-bomb';
+          item.speed += 2.4;
+        }
+
         item.el.style.transform = `translate(${item.x}px, ${item.y}px)`;
 
         const itemLeft = item.x;
@@ -676,15 +654,15 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
           itemBottom > playerTop &&
           itemTop < playerBottom;
 
-       if (hit) {
-  if (item.type === 'money') {
-    score += 1;
-    updateScoreUI();
-  } else {
-    score = Math.max(0, score - 2);
-    updateScoreUI();
-    triggerHurtSkin();
-  }
+        if (hit) {
+          if (item.type === 'money') {
+            score += 1;
+            updateScoreUI();
+          } else {
+            score = Math.max(0, score - 2);
+            updateScoreUI();
+            triggerHurtSkin();
+          }
 
           item.el.remove();
           return false;
@@ -706,29 +684,19 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
 
   gameBtn.addEventListener('click', function (e) {
     e.preventDefault();
-    if (!isOpen) {
-      openGame();
-    }
+    if (!isOpen) openGame();
   });
 
-  gameClose.addEventListener('click', function () {
-    closeGame();
-  });
+  gameClose.addEventListener('click', closeGame);
 
   gameModal.addEventListener('click', function (e) {
-    if (e.target === gameModal) {
-      closeGame();
-    }
+    if (e.target === gameModal) closeGame();
   });
 
-  gameRestart.addEventListener('click', function () {
-    startGame();
-  });
+  gameRestart.addEventListener('click', startGame);
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && isOpen) {
-      closeGame();
-    }
+    if (e.key === 'Escape' && isOpen) closeGame();
   });
 
   gameStage.addEventListener('mousemove', function (e) {
