@@ -801,3 +801,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   textarea.addEventListener('input', autoResize);
 });
+/* =============================
+   PAGE LOADED FLAG
+============================= */
+window.addEventListener('load', function () {
+  document.body.classList.add('page-loaded');
+});
