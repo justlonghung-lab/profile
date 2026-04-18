@@ -214,31 +214,83 @@ body::after {
 }
 
 .info {
-  animation: sectionIn 0.95s cubic-bezier(.16,1,.3,1) 1.7s forwards;
-}
-
-.social-links {
-  animation: sectionIn 0.95s cubic-bezier(.16,1,.3,1) 2.45s forwards;
-}
-
-.action-row {
-  animation: sectionIn 0.95s cubic-bezier(.16,1,.3,1) 3.15s forwards;
-}
-
-.confess-wrap {
-  animation: sectionIn 1s cubic-bezier(.16,1,.3,1) 3.95s forwards;
-}
-.avatar-orbit {
-  position: absolute;
-  inset: -12px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(111, 211, 255, 0.24);
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 16px 14px;
+  text-align: center;
+  border-radius: 20px;
+  transform: translateZ(18px);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    linear-gradient(135deg, rgba(111, 211, 255, 0.08), rgba(10, 132, 255, 0.03)),
+    linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  border: 1px solid rgba(111, 211, 255, 0.1);
   box-shadow:
-    0 0 0 1px rgba(111, 211, 255, 0.06),
-    0 0 26px rgba(10, 132, 255, 0.16);
-  animation: orbitSpin 9s linear infinite;
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 10px 26px rgba(0,0,0,0.16);
+  transition:
+    transform 0.32s ease,
+    box-shadow 0.32s ease,
+    border-color 0.32s ease,
+    background 0.32s ease;
+}
+.info::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  box-shadow:
+    inset 0 0 0 1px rgba(180, 235, 255, 0.55),
+    0 0 14px rgba(111, 211, 255, 0.2),
+    0 0 26px rgba(10, 132, 255, 0.12);
+  transition: opacity 0.32s ease, box-shadow 0.32s ease;
+}
+.info::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -120%;
+  width: 32%;
+  height: 120%;
+  transform: rotate(16deg);
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,0.08) 22%,
+    rgba(255,255,255,0.72) 50%,
+    rgba(180,235,255,0.12) 74%,
+    rgba(255,255,255,0) 100%
+  );
+  filter: blur(2px);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.info:hover {
+  transform: translateY(-4px) translateZ(18px) scale(1.015);
+  border-color: rgba(150, 225, 255, 0.28);
+  background:
+    linear-gradient(135deg, rgba(111, 211, 255, 0.1), rgba(10, 132, 255, 0.04)),
+    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 16px 34px rgba(0,0,0,0.2),
+    0 0 14px rgba(111, 211, 255, 0.08);
 }
 
+.info:hover::before {
+  opacity: 1;
+}
+
+.info:hover::after {
+  animation: infoSweep 1.05s ease forwards;
+  opacity: 1;
+}
 @keyframes orbitSpin {
   to {
     transform: rotate(360deg);
@@ -1613,4 +1665,23 @@ body:not(.page-loaded) .confess-wrap {
   .game-result-score-value strong {
     font-size: 1.75rem;
   }
+}
+@keyframes infoSweep {
+  0% {
+    left: -120%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    left: 140%;
+    opacity: 0;
+  }
+}
+.name,
+.job-title,
+.bio {
+  position: relative;
+  z-index: 1;
 }
