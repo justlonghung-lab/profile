@@ -101,23 +101,30 @@ document.addEventListener('mousemove', (e) => {
   const layer = document.getElementById('geoLayer');
   if (!layer) return;
 
-  const count = 54;
+  layer.innerHTML = '';
+
+  const count = 28;
 
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
     el.className = 'geo';
 
-    const size = 30 + Math.random() * 120;
+    const size = 36 + Math.random() * 84;
+    const isCircle = Math.random() > 0.45;
+
     el.style.width = `${size}px`;
     el.style.height = `${size}px`;
     el.style.left = `${Math.random() * 100}%`;
-    el.style.top = `${100 + Math.random() * 45}%`;
-    el.style.borderRadius = Math.random() > 0.5 ? '50%' : `${8 + Math.random() * 18}px`;
-    el.style.animationDuration = `${14 + Math.random() * 24}s`;
-    el.style.animationDelay = `-${Math.random() * 20}s`;
+    el.style.top = `${Math.random() * 100}%`;
+    el.style.borderRadius = isCircle ? '50%' : `${10 + Math.random() * 18}px`;
+
+    const dur = 18 + Math.random() * 18;
+    el.style.animationDuration = `${dur}s`;
+    el.style.animationDelay = `-${Math.random() * dur}s`;
 
     layer.appendChild(el);
   }
+})();
 
   function spawnBurst(x, y, n = 8) {
     for (let i = 0; i < n; i++) {
