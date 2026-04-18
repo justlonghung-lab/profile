@@ -101,30 +101,23 @@ document.addEventListener('mousemove', (e) => {
   const layer = document.getElementById('geoLayer');
   if (!layer) return;
 
-  layer.innerHTML = '';
-
-  const count = 28;
+  const count = 34;
 
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
     el.className = 'geo';
 
-    const size = 36 + Math.random() * 84;
-    const isCircle = Math.random() > 0.45;
-
+    const size = 24 + Math.random() * 92;
     el.style.width = `${size}px`;
     el.style.height = `${size}px`;
     el.style.left = `${Math.random() * 100}%`;
-    el.style.top = `${Math.random() * 100}%`;
-    el.style.borderRadius = isCircle ? '50%' : `${10 + Math.random() * 18}px`;
-
-    const dur = 18 + Math.random() * 18;
-    el.style.animationDuration = `${dur}s`;
-    el.style.animationDelay = `-${Math.random() * dur}s`;
+    el.style.top = `${100 + Math.random() * 45}%`;
+    el.style.borderRadius = Math.random() > 0.5 ? '50%' : `${8 + Math.random() * 18}px`;
+    el.style.animationDuration = `${14 + Math.random() * 24}s`;
+    el.style.animationDelay = `-${Math.random() * 20}s`;
 
     layer.appendChild(el);
   }
-})();
 
   function spawnBurst(x, y, n = 8) {
     for (let i = 0; i < n; i++) {
@@ -378,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = document.getElementById('confessMessage')?.value.trim() || '';
 
     if (!name || !message) {
-      status.textContent = 'Điền họ và tên.';
+      status.textContent = 'Điền đủ họ tên và lời nhắn đi đã.';
       status.className = 'confess-status error';
       return;
     }
@@ -407,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       form.reset();
       if (textarea) textarea.style.height = '48px';
-      status.textContent = 'Đã gửi';
+      status.textContent = 'Đã tỏ tình và chờ đồng ý.';
       status.className = 'confess-status success';
     } catch (err) {
       status.textContent = 'Chưa thể gửi, mã lỗi LH36';
