@@ -118,24 +118,14 @@ body::after {
   animation: floatGeo linear infinite;
 }
 
-@keyframes floatGeo {
-  0% {
-    transform: translateY(0) rotate(0deg) scale(0.96);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.6;
-  }
-  40% {
-    opacity: 0.48;
-  }
-  75% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateY(-125vh) rotate(360deg) scale(1.2);
-    opacity: 0;
-  }
+10% {
+  opacity: 0.42;
+}
+40% {
+  opacity: 0.32;
+}
+75% {
+  opacity: 0.18;
 }
 
 /* ── SCENE ── */
