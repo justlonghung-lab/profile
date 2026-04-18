@@ -788,3 +788,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 });
+/* AUTO RESIZE TEXTAREA */
+document.addEventListener('DOMContentLoaded', function () {
+  const textarea = document.getElementById('confessMessage');
+  if (!textarea) return;
+
+  function autoResize() {
+    textarea.style.height = '48px'; // reset về size ban đầu
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+  textarea.addEventListener('input', autoResize);
+});
