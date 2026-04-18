@@ -36,7 +36,7 @@
         <div class="info">
           <h1 class="name">Nông Long Hưng</h1>
           <p class="job-title">MEDIA CREATOR</p>
-         <p class="bio">"Trong số bọn tao, có thằng<br>dreadlock có thằng tóc bết."</p>
+          <p class="bio">"Trong số bọn tao, có thằng<br>dreadlock có thằng tóc bết."</p>
         </div>
 
         <div class="social-links">
@@ -67,91 +67,97 @@
             <span class="fund-pulse"></span>
           </button>
         </div>
+
         <div class="confess-wrap">
-  <div class="confess-card">
+          <div class="confess-card" id="confessCard">
+            <div class="confess-title">Tỏ tình</div>
 
-    <div class="confess-title">Tỏ tình</div>
+            <form class="confess-form" id="confessForm">
+              <label class="confess-label" for="confessName">Tên tuổi</label>
+              <input
+                class="confess-input"
+                id="confessName"
+                name="name"
+                type="text"
+                placeholder="Tên của bạn là gì đây"
+                maxlength="60"
+                required
+              />
 
-    <form id="confessForm" class="confess-form">
+              <label class="confess-label" for="confessMessage">Lời nhắn</label>
+              <textarea
+                class="confess-textarea"
+                id="confessMessage"
+                name="message"
+                placeholder="Viết gì đó tử tế hoặc tệ hại cũng được"
+                maxlength="500"
+                required
+              ></textarea>
 
-      <input
-        type="text"
-        id="confessName"
-        class="confess-input"
-        placeholder="Tên tuổi"
-        required
-      />
+              <button class="confess-btn" id="confessSubmit" type="submit">
+                Gửi lời nhắn
+              </button>
 
-      <textarea
-        id="confessMessage"
-        class="confess-textarea"
-        placeholder="Lời nhắn"
-        required
-      ></textarea>
-
-      <button type="submit" id="confessSubmit" class="confess-btn">
-        Gửi lời nhắn
-      </button>
-
-      <div id="confessStatus" class="confess-status"></div>
-
-    </form>
-
-  </div>
-</div>
-      </div>
-    </div>
-  </div>
-
- <div class="game-modal" id="gameModal" aria-hidden="true">
-  <div class="game-panel">
-    <button class="game-close" id="gameClose" type="button">✕</button>
-
-    <div class="game-head">
-      <div class="game-title">Gêm Hứng Tiền</div>
-
-      <div class="game-head-right">
-        <div class="game-timer-wrap">
-          <span>Thời gian:</span>
-          <strong id="gameTimer">15</strong>
-        </div>
-
-        <div class="game-score-wrap">
-          <span>Điểm:</span>
-          <strong id="gameScore">0</strong>
+              <div class="confess-status" id="confessStatus"></div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="game-stage" id="gameStage">
-      <div class="game-hud">Di chuột để hứng tiền, né bom</div>
+  <div class="game-modal" id="gameModal" aria-hidden="true">
+    <div class="game-panel">
+      <button class="game-close" id="gameClose" type="button">✕</button>
 
-      <img
-        src="phule.png"
-        alt="Nhân vật game"
-        class="game-player"
-        id="gamePlayer"
-        data-normal="phule.png"
-        data-hurt="phuledau.png"
-      />
+      <div class="game-head">
+        <div class="game-title">Gêm Hứng Tiền</div>
 
-      <div class="game-result" id="gameResult">
-  <div class="game-result-card">
-    <div class="game-result-title">Hết giờ</div>
+        <div class="game-head-right">
+          <div class="game-timer-wrap">
+            <span>Thời gian:</span>
+            <strong id="gameTimer">15</strong>
+          </div>
 
-    <div class="game-result-score-row">
-      <img src="phulediem.png" alt="Điểm số" class="game-result-avatar" />
-      <div class="game-result-score-block">
-        <div class="game-result-score-label">Điểm của bạn</div>
-        <div class="game-result-score-value">
-          <strong id="gameFinalScore">0</strong>
+          <div class="game-score-wrap">
+            <span>Điểm:</span>
+            <strong id="gameScore">0</strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-stage" id="gameStage">
+        <div class="game-hud">Di chuột để hứng tiền, né bom</div>
+
+        <img
+          src="phule.png"
+          alt="Nhân vật game"
+          class="game-player"
+          id="gamePlayer"
+          data-normal="phule.png"
+          data-hurt="phuledau.png"
+        />
+
+        <div class="game-result" id="gameResult">
+          <div class="game-result-card">
+            <div class="game-result-title">Hết giờ</div>
+
+            <div class="game-result-score-row">
+              <img src="phulediem.png" alt="Điểm số" class="game-result-avatar" />
+              <div class="game-result-score-block">
+                <div class="game-result-score-label">Điểm của bạn</div>
+                <div class="game-result-score-value">
+                  <strong id="gameFinalScore">0</strong>
+                </div>
+              </div>
+            </div>
+
+            <button class="game-restart" id="gameRestart" type="button">Chơi lại</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <button class="game-restart" id="gameRestart" type="button">Chơi lại</button>
   </div>
-</div>
 
   <script src="script.js"></script>
 </body>
