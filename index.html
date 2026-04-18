@@ -71,24 +71,50 @@
     </div>
   </div>
 
-  <div class="game-modal" id="gameModal" aria-hidden="true">
-    <div class="game-panel">
-      <button class="game-close" id="gameClose" type="button">✕</button>
+ <div class="game-modal" id="gameModal" aria-hidden="true">
+  <div class="game-panel">
+    <button class="game-close" id="gameClose" type="button">✕</button>
 
-      <div class="game-head">
-        <div class="game-title">Gêm Hứng Tiền</div>
+    <div class="game-head">
+      <div class="game-title">Gêm Hứng Tiền</div>
+
+      <div class="game-head-right">
+        <div class="game-timer-wrap">
+          <span>Thời gian:</span>
+          <strong id="gameTimer">15</strong>
+        </div>
+
         <div class="game-score-wrap">
           <span>Điểm:</span>
           <strong id="gameScore">0</strong>
         </div>
       </div>
+    </div>
 
-      <div class="game-stage" id="gameStage">
-        <div class="game-hud">Di chuột để hứng tiền</div>
-        <img src="phule.png" alt="Nhân vật game" class="game-player" id="gamePlayer" />
+    <div class="game-stage" id="gameStage">
+      <div class="game-hud">Di chuột để hứng tiền, né bom</div>
+
+      <img
+        src="phule.png"
+        alt="Nhân vật game"
+        class="game-player"
+        id="gamePlayer"
+        data-normal="phule.png"
+        data-hurt="phuledau.png"
+      />
+
+      <div class="game-result" id="gameResult">
+        <div class="game-result-card">
+          <div class="game-result-title">Hết giờ</div>
+          <div class="game-result-score">
+            Điểm của bạn: <strong id="gameFinalScore">0</strong>
+          </div>
+          <button class="game-restart" id="gameRestart" type="button">Chơi lại</button>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
   <script src="script.js"></script>
 </body>
