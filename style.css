@@ -1031,9 +1031,7 @@ body::after {
 }
 
 .game-player {
-  transition:
-    transform 0.12s ease,
-    filter 0.18s ease;
+  transition: transform 0.12s ease, filter 0.18s ease;
 }
 
 .game-player.hurt {
@@ -1153,17 +1151,6 @@ body::after {
   transform: translateY(-2px);
 }
 
-@media (max-width: 640px) {
-  .game-head-right {
-    gap: 8px;
-  }
-
-  .game-money,
-  .game-bomb {
-    width: 36px;
-    height: 36px;
-  }
-}
 .game-stage.warning {
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.05),
@@ -1173,7 +1160,7 @@ body::after {
 }
 
 .game-stage.warning::before {
-  content: '⚠ CẢNH BÁO';
+  content: '⚠ CANH BAO';
   position: absolute;
   top: 12px;
   right: 14px;
@@ -1190,10 +1177,6 @@ body::after {
 }
 
 @keyframes warningPulse {
-  0%, 100% {
-    filter: saturate(1);
-  }
-  50% {
-    filter: saturate(1.22);
-  }
+  0%, 100% { filter: saturate(1); }
+  50% { filter: saturate(1.22); }
 }
