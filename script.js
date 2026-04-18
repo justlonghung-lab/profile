@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (!form || !status || !submitBtn) return;
 
-  const ENDPOINT_URL = 'YOUR_WORKER_URL_HERE';
+  const ENDPOINT_URL = 'https://telegram.justlonghung.workers.dev';
 
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
