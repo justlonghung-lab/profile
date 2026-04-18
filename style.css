@@ -208,11 +208,13 @@ body::after {
 }
 
 /* ── AVATAR ── */
-.avatar-block {
-  position: relative;
-  width: 148px;
-  height: 148px;
-  transform: translateZ(34px);
+.avatar-block,
+.info,
+.social-links,
+.action-row,
+.confess-wrap {
+  opacity: 0;
+  transform: translateY(28px) scale(0.96);
 }
 
 .avatar-orbit {
