@@ -101,7 +101,7 @@ document.addEventListener('mousemove', (e) => {
   const layer = document.getElementById('geoLayer');
   if (!layer) return;
 
-  const count = 34;
+  const count = 64;
 
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
