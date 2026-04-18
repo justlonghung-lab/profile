@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = document.getElementById('confessMessage')?.value.trim() || '';
 
     if (!name || !message) {
-      status.textContent = 'Điền đủ họ tên và lời nhắn đi đã.';
+      status.textContent = 'Điền họ và tên.';
       status.className = 'confess-status error';
       return;
     }
