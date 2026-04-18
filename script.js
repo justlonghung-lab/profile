@@ -650,6 +650,13 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
 
       fallingItems = fallingItems.filter(item => {
         item.y += item.speed;
+         if (item.type === 'fakeMoney' && !item.flipped && item.y >= item.flipAtY) {
+  item.flipped = true;
+  item.type = 'bomb';
+  item.el.textContent = '💣';
+  item.el.className = 'game-bomb';
+  item.speed += 2.4;
+}
         item.el.style.transform = `translate(${item.x}px, ${item.y}px)`;
 
         const itemLeft = item.x;
