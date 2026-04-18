@@ -461,13 +461,6 @@ body::after {
     background 0.32s ease;
 }
 
-.info::before {
-  display: none;
-}
-
-.info::after {
-  display: none;
-}
 
 .info:hover {
   transform: translateY(-4px) translateZ(18px) scale(1.015);
