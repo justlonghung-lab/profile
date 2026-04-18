@@ -751,7 +751,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const message = document.getElementById('confessMessage')?.value.trim() || '';
 
     if (!name || !message) {
-      status.textContent = 'Điền đủ tên tuổi và lời nhắn đi đã.';
+      status.textContent = 'Thiếu thông tin';
       status.className = 'confess-status error';
       return;
     }
@@ -779,10 +779,10 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       form.reset();
-      status.textContent = 'Gửi rồi. Nếu người nhận phũ thì đó là chuyện khác.';
+      status.textContent = 'Đã tỏ tình, đang chờ đồng ý.';
       status.className = 'confess-status success';
     } catch (err) {
-      status.textContent = 'Gửi lỗi. Kiểm tra endpoint Telegram giúp tôi.';
+      status.textContent = 'Giả vờ lỗi';
       status.className = 'confess-status error';
     } finally {
       submitBtn.disabled = false;
