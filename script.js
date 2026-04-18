@@ -730,3 +730,61 @@ document.addEventListener('DOMContentLoaded', function () {
     updateRect();
   });
 });
+/* =============================
+   CONFESS FORM
+============================= */
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('confessForm');
+  const status = document.getElementById('confessStatus');
+  const submitBtn = document.getElementById('confessSubmit');
+
+  if (!form || !status || !submitBtn) return;
+
+  // Dán URL Cloudflare Worker / Netlify Function của bạn vào đây
+  const ENDPOINT_URL = 'YOUR_WORKER_URL_HERE';
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById('confessName')?.value.trim() || '';
+    const message = document.getElementById('confessMessage')?.value.trim() || '';
+
+    if (!name || !message) {
+      status.textContent = 'Điền đủ tên tuổi và lời nhắn đi đã.';
+      status.className = 'confess-status error';
+      return;
+    }
+
+    submitBtn.disabled = true;
+    status.textContent = 'Đang gửi...';
+    status.className = 'confess-status';
+
+    try {
+      const res = await fetch(ENDPOINT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          message,
+          page: window.location.href,
+          sentAt: new Date().toISOString()
+        })
+      });
+
+      if (!res.ok) {
+        throw new Error('Send failed');
+      }
+
+      form.reset();
+      status.textContent = 'Gửi rồi. Nếu người nhận phũ thì đó là chuyện khác.';
+      status.className = 'confess-status success';
+    } catch (err) {
+      status.textContent = 'Gửi lỗi. Kiểm tra endpoint Telegram giúp tôi.';
+      status.className = 'confess-status error';
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+});
