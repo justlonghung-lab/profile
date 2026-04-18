@@ -429,8 +429,14 @@ const WARNING_PHASE_START = 3; // 3 giây cuối cảnh báo
   }
 
   function updateTimerUI() {
-    gameTimer.textContent = String(timeLeft);
+  gameTimer.textContent = String(timeLeft);
+
+  if (timeLeft <= WARNING_PHASE_START) {
+    gameStage.classList.add('warning');
+  } else {
+    gameStage.classList.remove('warning');
   }
+}
 
   function openGame() {
     isOpen = true;
