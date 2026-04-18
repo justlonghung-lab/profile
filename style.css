@@ -1231,17 +1231,17 @@ body::after {
 .confess-card::after {
   content: '';
   position: absolute;
-  top: -28%;
-  left: -140%;
-  width: 40%;
-  height: 180%;
-  transform: rotate(20deg);
+  top: -10%;
+  left: -120%;
+  width: 32%;
+  height: 120%;
+  transform: rotate(16deg);
   background: linear-gradient(
     90deg,
     rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.12) 18%,
-    rgba(255,255,255,0.92) 50%,
-    rgba(180,235,255,0.16) 72%,
+    rgba(255,255,255,0.08) 22%,
+    rgba(255,255,255,0.72) 50%,
+    rgba(180,235,255,0.12) 74%,
     rgba(255,255,255,0) 100%
   );
   filter: blur(2px);
