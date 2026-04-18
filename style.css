@@ -1544,3 +1544,11 @@ body::after {
     transform: rotate(-11deg) translate(-5px, 6px);
   }
 }
+body:not(.page-loaded) .card,
+body:not(.page-loaded) .avatar-block,
+body:not(.page-loaded) .info,
+body:not(.page-loaded) .social-links,
+body:not(.page-loaded) .action-row,
+body:not(.page-loaded) .confess-wrap {
+  animation-play-state: paused !important;
+}
