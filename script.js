@@ -400,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       form.reset();
       if (textarea) textarea.style.height = '48px';
-      status.textContent = 'Đã tỏ tình và chờ đồng ý.';
+      status.textContent = 'Đã Gửi.';
       status.className = 'confess-status success';
     } catch (err) {
       status.textContent = 'Chưa thể gửi, mã lỗi LH36';
