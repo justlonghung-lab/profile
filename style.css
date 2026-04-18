@@ -1325,7 +1325,11 @@ body::after {
 }
 
 .confess-textarea {
-  min-height: 120px;
+  height: 48px;              /* ngang với input */
+  min-height: 48px;
+  max-height: 180px;         /* tránh kéo quá dài mất kiểm soát */
+  resize: none;              /* bỏ resize tay */
+  overflow-y: hidden;        /* không hiện scroll */
   resize: vertical;
 }
 
