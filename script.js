@@ -101,13 +101,13 @@ document.addEventListener('mousemove', (e) => {
   const layer = document.getElementById('geoLayer');
   if (!layer) return;
 
-  const count = 64;
+  const count = 36;
 
   for (let i = 0; i < count; i++) {
     const el = document.createElement('div');
     el.className = 'geo';
 
-    const size = 24 + Math.random() * 92;
+    const size = 22 + Math.random() * 86;
     el.style.width = `${size}px`;
     el.style.height = `${size}px`;
     el.style.left = `${Math.random() * 100}%`;
